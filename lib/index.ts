@@ -1,1 +1,3 @@
-// Export your library here
+import ElastickBird from './elastickbird';
+
+export default ElastickBird;
