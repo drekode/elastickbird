@@ -4,8 +4,11 @@
   "description": "elasticsearch object modeling for nodejs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "author": "",
+  "author": "Dresiko",
   "license": "Apache-2.0",
+  "scripts": {
+    "test": "jest ./jest/**/*.test.ts"
+  },
   "devDependencies": {
     "@clever/prettier-config": "^1.0.0",
     "@testing-library/jest-dom": "^5.17.0",
