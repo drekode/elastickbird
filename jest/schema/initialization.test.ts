@@ -1,6 +1,6 @@
-import ElastickBird from "../../lib/elastickbird";
+import { Schema } from "../../lib/elastickbird";
 
 test("Schema instance is an object", () => {
-    const Example = new ElastickBird.Schema();
-    expect(Example).toBeInstanceOf(Object);
+  const ExampleModel = new Schema();
+  expect(ExampleModel).toBeInstanceOf(Object);
 });
