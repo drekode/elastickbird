@@ -24,8 +24,8 @@ services:
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     ports:
-      - 9201:9200
-      - 9301:9300
+      - 9203:9200
+      - 9303:9300
 
 volumes:
   elasticsearch-data: {}
