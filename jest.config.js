@@ -1,4 +1,5 @@
 module.exports = {
+  globalSetup: "./jest/global-setup.ts",
   moduleNameMapper: {
     ".*.(css|less|png|svg)$": "<rootDir>/jest/staticImportStub.js",
   },
