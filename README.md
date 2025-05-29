@@ -1,5 +1,271 @@
-# ElastickBird
+# ElastickBird 🐦
 
-elasticsearch object modeling for Node.js
+A high-level Elasticsearch driver for Node.js, inspired by Mongoose and Sequelize. ElastickBird provides an elegant, schema-based solution to work with Elasticsearch, making it easy to define mappings, perform CRUD operations, and execute complex queries.
 
-Owned by Dresiko
+## Features
+
+- 🏗️ **Schema-based approach** - Define your Elasticsearch mappings with TypeScript interfaces
+- 🔍 **Powerful Query Builder** - Fluent API for building complex Elasticsearch queries
+- 📦 **Bulk Operations** - Efficient bulk indexing, updating, and deleting with batch support
+- 🔄 **Index Management** - Create, update, and manage Elasticsearch indices
+- 🛡️ **Type Safety** - Full TypeScript support with proper type definitions
+- 🚀 **High Performance** - Optimized for production use with connection pooling
+- 📊 **Advanced Features** - Support for routing, filtering rules, and search-after pagination
+
+## Installation
+
+```bash
+npm install @dresiko/elastickbird
+```
+
+## Quick Start
+
+### 1. Configure Elasticsearch Client
+
+```typescript
+import { ElasticsearchClient } from '@dresiko/elastickbird';
+
+// Configure the Elasticsearch client
+ElasticsearchClient.configure({
+  node: 'http://localhost:9200',
+  auth: {
+    username: 'elastic',
+    password: 'password'
+  }
+});
+```
+
+### 2. Define a Schema
+
+```typescript
+import { ElasticSchema } from '@dresiko/elastickbird';
+
+// Define your schema
+const userSchema = new ElasticSchema({
+  alias: 'users',
+  primaryKeyAttribute: 'id',
+  mappings: {
+    properties: {
+      id: { type: 'keyword' },
+      name: { type: 'text' },
+      email: { type: 'keyword' },
+      age: { type: 'integer' },
+      createdAt: { type: 'date' }
+    }
+  },
+  settings: {
+    number_of_shards: 1,
+    number_of_replicas: 0
+  }
+});
+```
+
+### 3. Basic Operations
+
+```typescript
+// Create the index
+await userSchema.createIndexIfNotExists();
+
+// Index a document
+const result = await userSchema.indexDocument({
+  id: '1',
+  name: 'John Doe',
+  email: 'john@example.com',
+  age: 30,
+  createdAt: new Date()
+});
+
+// Get a document by ID
+const user = await userSchema.getDocumentById({ id: '1' });
+
+// Update a document
+await userSchema.updateDocument({
+  id: '1',
+  name: 'John Smith',
+  age: 31
+});
+
+// Delete a document
+await userSchema.deleteDocument({ id: '1' });
+```
+
+### 4. Search with Query Builder
+
+```typescript
+// Create a query builder
+const queryBuilder = userSchema.QueryBuilder();
+
+// Build a complex query
+queryBuilder
+  .addTerm('status', 'active')
+  .should({ minimumShouldMatch: 1 })
+    .addMatch('name', 'john')
+    .addRange('age', { gte: 18, lte: 65 })
+  .setSize(10)
+  .addSort('createdAt', 'desc');
+
+// Execute the search
+const searchResults = await userSchema.search(queryBuilder.build());
+console.log(searchResults.rows); // Array of matching documents
+console.log(searchResults.count); // Total count
+```
+
+### 5. Bulk Operations
+
+```typescript
+// Initialize bulk operation
+const bulk = userSchema.initBulk({ batchSize: 1000 });
+
+// Add multiple operations
+bulk.addIndexOperation({ id: '1', name: 'User 1', email: 'user1@example.com' });
+bulk.addIndexOperation({ id: '2', name: 'User 2', email: 'user2@example.com' });
+bulk.addUpdateOperation({ id: '1', name: 'Updated User 1' });
+
+// Execute all operations
+const bulkResult = await bulk.execute();
+console.log(bulkResult.success); // true if all operations succeeded
+```
+
+## Advanced Features
+
+### Routing
+
+```typescript
+const schema = new ElasticSchema({
+  alias: 'orders',
+  routing: 'customerId', // Route documents by customer ID
+  mappings: {
+    properties: {
+      id: { type: 'keyword' },
+      customerId: { type: 'keyword' },
+      amount: { type: 'float' }
+    }
+  }
+});
+```
+
+### Filter Rules
+
+```typescript
+import { ElasticsearchFilterRules } from '@dresiko/elastickbird';
+
+const filterRules = new ElasticsearchFilterRules({
+  'active-users': (queryBuilder) => {
+    queryBuilder.addTerm('status', 'active');
+  },
+  'recent': (queryBuilder) => {
+    queryBuilder.addRange('createdAt', { gte: 'now-7d' });
+  }
+});
+
+const schema = new ElasticSchema({
+  alias: 'users',
+  filterRules,
+  mappings: { /* ... */ }
+});
+
+// Use filter rules in queries
+const queryBuilder = schema.QueryBuilder();
+queryBuilder.applyFilters('active-users,recent');
+```
+
+### Bulk Queue (Auto-batching)
+
+```typescript
+// Initialize bulk queue for auto-batching
+const bulkQueue = userSchema.initBulkQueue({ batchSize: 500 });
+
+// Add operations - they'll be automatically batched and executed
+bulkQueue.addOperationsToQueue('index', [
+  { id: '1', name: 'User 1' },
+  { id: '2', name: 'User 2' },
+  // ... thousands of documents
+]);
+
+// Wait for all operations to complete
+const result = await bulkQueue.waitForCompletion();
+```
+
+## API Reference
+
+### ElasticSchema
+
+The main class for defining and working with Elasticsearch indices.
+
+#### Constructor Options
+
+```typescript
+interface ElasticSchemaConfig {
+  alias: string;                    // Index alias name
+  mappings: Record<string, any>;    // Elasticsearch mappings
+  primaryKeyAttribute?: string;     // Primary key field (default: 'id')
+  primaryKeyAttributes?: string[];  // Multiple primary key fields
+  settings?: Record<string, any>;   // Index settings
+  routing?: string;                 // Routing field
+  routingRules?: Record<string, (value: any) => string>;
+  filterRules?: ElasticsearchFilterRules;
+  sortRules?: Record<string, (queryBuilder: any, order: string) => void>;
+  searchAfterDelimiter?: string;    // Delimiter for search-after (default: '~')
+}
+```
+
+#### Methods
+
+- `createIndex(options?)` - Create a new index
+- `createIndexIfNotExists()` - Create index if it doesn't exist
+- `deleteIndex()` - Delete the current index
+- `truncateIndex()` - Delete and recreate the index
+- `syncMapping()` - Update index mappings
+- `indexDocument(payload, options?)` - Index a document
+- `createDocument(payload, options?)` - Create a document (fails if exists)
+- `updateDocument(payload, options?)` - Update a document
+- `deleteDocument(payload, options?)` - Delete a document
+- `search(request, options?)` - Execute a search query
+- `deleteByQuery(params)` - Delete documents by query
+- `updateByQuery(params)` - Update documents by query
+- `documentExists(payload)` - Check if document exists
+- `getDocumentById(payload)` - Get document by ID
+- `QueryBuilder()` - Create a new query builder
+- `initBulk(options?)` - Initialize bulk operations
+- `initBulkQueue(options?)` - Initialize auto-batching bulk queue
+
+### ElasticsearchQueryBuilder
+
+Fluent API for building Elasticsearch queries.
+
+#### Query Methods
+
+- `addTerm(field, value)` - Add term query
+- `addTerms(field, values)` - Add terms query
+- `addMatch(field, value)` - Add match query
+- `addRange(field, query)` - Add range query
+- `addExists(field)` - Add exists query
+- `addQueryString(query, options?)` - Add query string
+- `addCustomClause(clause)` - Add custom query clause
+
+#### Boolean Query Methods
+
+- `must()` - Must occurrence (AND)
+- `should(options?)` - Should occurrence (OR)
+- `filter()` - Filter occurrence (no scoring)
+- `mustNot()` - Must not occurrence (NOT)
+
+#### Utility Methods
+
+- `setSize(size)` - Set result size
+- `setFrom(from)` - Set offset for pagination
+- `addSort(field, order?)` - Add sort clause
+- `setSearchAfter(searchAfter)` - Set search-after for pagination
+- `build()` - Build the final query object
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+Apache-2.0
+
+## Support
+
+If you have any questions or need help, please open an issue on GitHub.

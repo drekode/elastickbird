@@ -1,10 +1,3 @@
-import Schema = require('./schema');
-import Client = require('./client');
+import { ElasticSchema } from './schema/ElasticSchema';
 
-const connect = Client.connect;
-const ElastickBird = {
-    connect
-};
-
-export default ElastickBird;
-export { connect, Schema };
+export default ElasticSchema;

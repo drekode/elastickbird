@@ -1,6 +1,9 @@
-import type { ElastickBirdClient } from "./client.d";
 import type { ClientOptions } from "@elastic/elasticsearch";
 import { Client as NativeClient } from "@elastic/elasticsearch"
+
+export interface ElastickBirdClient {
+    client: NativeClient | null;
+}
 
 export default class ElastickBirdClientClass implements ElastickBirdClient {
     client: NativeClient | null;

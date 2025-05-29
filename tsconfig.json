@@ -10,7 +10,9 @@
     "skipLibCheck": true,
     "target": "ES2022",
     "typeRoots": ["node_modules/@types", "types"],
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
+    "declaration": true
   },
-  "exclude": ["jest", "node_modules"]
+  "include": ["lib/**/*"],
+  "exclude": ["jest", "node_modules", "examples", "other", "**/*.test.ts", "**/*.spec.ts"]
 }

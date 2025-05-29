@@ -7,6 +7,9 @@
   "author": "Dresiko",
   "license": "Apache-2.0",
   "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build",
     "test": "jest ./jest/**/*.test.ts"
   },
   "devDependencies": {
