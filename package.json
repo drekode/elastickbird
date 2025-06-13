@@ -10,7 +10,13 @@
     "build": "tsc",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build",
-    "test": "jest ./jest/**/*.test.ts"
+    "test": "jest ./jest/**/*.test.ts",
+    "example": "npx ts-node --transpile-only examples/basic-usage.ts",
+    "example:compiled": "npm run build && node dist/examples/basic-usage.js",
+    "dev": "npx ts-node --transpile-only",
+    "rebuild": "npm run clean && npm run build",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint lib/**/*.ts"
   },
   "devDependencies": {
     "@clever/prettier-config": "^1.0.0",
