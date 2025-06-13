@@ -34,7 +34,7 @@ export class ElasticSchema {
    * @private
    */
   private generateNewIndexName(): string {
-    return this.schema.alias + "_" + new Date().toISOString().replace(/[-:.]/g, '').slice(0, 17);
+    return (this.schema.alias + "_" + new Date().toISOString().replace(/[-:.T]/g, '').slice(0, 15)).toLowerCase();
   }
 
   /**
@@ -517,7 +517,7 @@ export class ElasticSchema {
           resolve(task);
           return;
         }
-        if (progressCallback) {
+        if (progressCallback && task.task?.status?.updated !== undefined) {
           progressCallback(task.task.status.updated);
         }
         setTimeout(checkTask, progressIntervalDelay);

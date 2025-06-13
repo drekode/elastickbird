@@ -2,7 +2,7 @@ import { ElasticSchema, ElasticsearchClient } from '../lib';
 
 // Configure Elasticsearch client
 ElasticsearchClient.configure({
-  node: 'http://localhost:9200',
+  node: 'http://localhost:9202',
   // Uncomment if you need authentication
   // auth: {
   //   username: 'elastic',
@@ -94,10 +94,13 @@ async function basicExample() {
     
     // Build a complex query
     queryBuilder
-      .addTerm('status', 'active')
-      .should({ minimumShouldMatch: 1 })
-        .addMatch('name', 'john')
-        .addRange('age', { gte: 25, lte: 35 })
+      .addTerm('status', 'active');
+    
+    queryBuilder.should({ minimumShouldMatch: 1 })
+      .addMatch('name', 'john')
+      .addRange('age', { gte: 25, lte: 35 });
+      
+    queryBuilder
       .setSize(10)
       .addSort('createdAt', 'desc');
 

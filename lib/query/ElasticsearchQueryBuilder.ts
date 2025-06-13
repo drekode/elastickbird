@@ -36,6 +36,20 @@ export class ElasticsearchQueryBuilder {
   private refresh?: boolean | string;
   private script?: any;
 
+  // Dynamic method declarations for bound methods
+  public addTerm!: (field: string, value: any) => this;
+  public addTerms!: (field: string, values: any[]) => this;
+  public addMatch!: (field: string, value: any) => this;
+  public addExists!: (field: string) => this;
+  public addRange!: (field: string, query: any) => this;
+  public addCustomClause!: (clause: any) => this;
+  public addQueryString!: (query: string, options?: any) => this;
+  public applyFilters!: (filters?: any) => this;
+  public must!: () => OccurrenceQueryBuilder;
+  public should!: (options?: { minimumShouldMatch?: number }) => OccurrenceQueryBuilder;
+  public filter!: () => OccurrenceQueryBuilder;
+  public mustNot!: () => OccurrenceQueryBuilder;
+
   readonly OCCURRENCE_TYPES: string[] = ["must", "should", "filter", "mustNot"];
   readonly OCCURRENCE_QUERY_METHODS: string[] = [
     "addTerm",

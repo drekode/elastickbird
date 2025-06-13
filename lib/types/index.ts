@@ -45,6 +45,13 @@ export interface ByQueryOperationResult {
   failures: any[];
 }
 
+export interface BulkOperationResult {
+  success: boolean;
+  total: number;
+  errors?: any[];
+  firstError?: any;
+}
+
 export interface SearchRequest {
   query?: any;
   size?: number;

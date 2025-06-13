@@ -1,6 +1,6 @@
 import { ElasticsearchBulk } from './ElasticsearchBulk';
 import { DocOperationType } from '../utils/Constants';
-import { BulkOperationResult } from '../utils/ResponseResults';
+import { BulkOperationResult } from '../types';
 
 interface ElasticsearchBulkQueueOptions {
   getId: (payload: any) => string | number;

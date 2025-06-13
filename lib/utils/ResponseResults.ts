@@ -1,4 +1,4 @@
-import { DocumentOperationResult, ByQueryOperationResult } from '../types';
+import { DocumentOperationResult, ByQueryOperationResult, BulkOperationResult } from '../types';
 import { DOC_OPERATION_TYPES } from './Constants';
 
 /**
@@ -20,16 +20,6 @@ export function createDocumentOperationResult(response: any = {}): DocumentOpera
     created: response?.result === "created" ? 1 : 0,
     total: response?.result === "not_found" || response?.result === "conflict" ? 0 : 1
   };
-}
-
-/**
- * Bulk operation result interface
- */
-export interface BulkOperationResult {
-  success: boolean;
-  total: number;
-  errors?: any[];
-  firstError?: any;
 }
 
 /**

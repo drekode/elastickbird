@@ -1,6 +1,6 @@
 import { DOC_OPERATION_TYPES, DocOperationType } from '../utils/Constants';
+import { BulkOperationResult } from '../types';
 import { 
-  BulkOperationResult, 
   BulkOperationInBatchesResultInstance,
   createBulkOperationResult,
   createBulkOperationInBatchesResult
