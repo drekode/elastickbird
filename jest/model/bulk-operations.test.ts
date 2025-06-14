@@ -4,12 +4,12 @@ import { ElasticsearchClient } from "../../lib/client/ElasticsearchClient";
 const ELASTICSEARCH_URL = (global as any).ELASTICSEARCH_URL as string;
 
 describe("ElastickbirdModel Bulk Operations", () => {
-  let userSchema: ElastickbirdModel;
+  let UserModel: ElastickbirdModel;
   
   beforeEach(async () => {
     ElasticsearchClient.configure({ node: ELASTICSEARCH_URL });
     
-    userSchema = new ElastickbirdModel({
+    UserModel = new ElastickbirdModel({
       alias: 'test-bulk-users',
       primaryKeyAttribute: 'id',
       mappings: {
@@ -29,14 +29,14 @@ describe("ElastickbirdModel Bulk Operations", () => {
       }
     });
 
-    await userSchema.createIndexIfNotExists();
+    await UserModel.createIndexIfNotExists();
   });
 
   afterEach(async () => {
     try {
-      const exists = await userSchema.existsIndex();
+      const exists = await UserModel.existsIndex();
       if (exists) {
-        await userSchema.deleteIndex();
+        await UserModel.deleteIndex();
       }
     } catch (e) {
       // Ignore cleanup errors
@@ -46,7 +46,7 @@ describe("ElastickbirdModel Bulk Operations", () => {
 
   describe("Bulk Operations", () => {
     test("should initialize bulk operation", () => {
-      const bulk = userSchema.initBulk();
+      const bulk = UserModel.initBulk();
       expect(bulk).toBeDefined();
       expect(typeof bulk.execute).toBe('function');
       expect(typeof bulk.addIndexOperation).toBe('function');
@@ -55,7 +55,7 @@ describe("ElastickbirdModel Bulk Operations", () => {
     });
 
     test("should perform bulk index operations", async () => {
-      const bulk = userSchema.initBulk();
+      const bulk = UserModel.initBulk();
       
       const users = [
         {
@@ -88,25 +88,25 @@ describe("ElastickbirdModel Bulk Operations", () => {
       expect(result.total).toBe(2);
 
       // Verify documents were indexed
-      await userSchema.refreshIndex();
-      const exists1 = await userSchema.documentExists({ id: '1' });
-      const exists2 = await userSchema.documentExists({ id: '2' });
+      await UserModel.refreshIndex();
+      const exists1 = await UserModel.documentExists({ id: '1' });
+      const exists2 = await UserModel.documentExists({ id: '2' });
       expect(exists1).toBe(true);
       expect(exists2).toBe(true);
     });
 
     test("should perform mixed bulk operations", async () => {
       // First, create a document to update
-      await userSchema.indexDocument({
+      await UserModel.indexDocument({
         id: '1',
         name: 'John Doe',
         email: 'john@example.com',
         age: 30,
         status: 'active'
       });
-      await userSchema.refreshIndex();
+      await UserModel.refreshIndex();
 
-      const bulk = userSchema.initBulk();
+      const bulk = UserModel.initBulk();
       
       // Add new document
       bulk.addIndexOperation({
@@ -132,9 +132,9 @@ describe("ElastickbirdModel Bulk Operations", () => {
       expect(result.total).toBe(2);
 
       // Verify operations
-      await userSchema.refreshIndex();
-      const user1 = await userSchema.getDocumentById({ id: '1' });
-      const user2 = await userSchema.getDocumentById({ id: '2' });
+      await UserModel.refreshIndex();
+      const user1 = await UserModel.getDocumentById({ id: '1' });
+      const user2 = await UserModel.getDocumentById({ id: '2' });
       
       expect(user1.age).toBe(31);
       expect(user1.status).toBe('updated');
@@ -142,7 +142,7 @@ describe("ElastickbirdModel Bulk Operations", () => {
     });
 
     test("should handle bulk operation errors gracefully", async () => {
-      const bulk = userSchema.initBulk();
+      const bulk = UserModel.initBulk();
       
       // Add document with missing required field (should still succeed as ES is flexible)
       bulk.addIndexOperation({
@@ -161,14 +161,14 @@ describe("ElastickbirdModel Bulk Operations", () => {
 
   describe("Bulk Queue Operations", () => {
     test("should initialize bulk queue", () => {
-      const bulkQueue = userSchema.initBulkQueue();
+      const bulkQueue = UserModel.initBulkQueue();
       expect(bulkQueue).toBeDefined();
       expect(typeof bulkQueue.waitForCompletion).toBe('function');
       expect(typeof bulkQueue.addOperationsToQueue).toBe('function');
     });
 
     test("should process bulk queue operations", async () => {
-      const bulkQueue = userSchema.initBulkQueue({ batchSize: 2 });
+      const bulkQueue = UserModel.initBulkQueue({ batchSize: 2 });
       
       const users = [
         { id: '1', name: 'User 1', email: 'user1@example.com', age: 25 },
@@ -186,10 +186,10 @@ describe("ElastickbirdModel Bulk Operations", () => {
       expect(result.total).toBe(3);
 
       // Verify all documents were indexed
-      await userSchema.refreshIndex();
-      const exists1 = await userSchema.documentExists({ id: '1' });
-      const exists2 = await userSchema.documentExists({ id: '2' });
-      const exists3 = await userSchema.documentExists({ id: '3' });
+      await UserModel.refreshIndex();
+      const exists1 = await UserModel.documentExists({ id: '1' });
+      const exists2 = await UserModel.documentExists({ id: '2' });
+      const exists3 = await UserModel.documentExists({ id: '3' });
       
       expect(exists1).toBe(true);
       expect(exists2).toBe(true);
@@ -199,7 +199,7 @@ describe("ElastickbirdModel Bulk Operations", () => {
 
   describe("Batch Mode Operations", () => {
     test("should handle batch mode bulk operations", async () => {
-      const bulk = userSchema.initBulk({ 
+      const bulk = UserModel.initBulk({ 
         batchMode: true, 
         batchSize: 2 
       });
@@ -221,10 +221,10 @@ describe("ElastickbirdModel Bulk Operations", () => {
       expect(result.total).toBe(5);
 
       // Verify all documents were indexed
-      await userSchema.refreshIndex();
+      await UserModel.refreshIndex();
       
       for (let i = 1; i <= 5; i++) {
-        const exists = await userSchema.documentExists({ id: `user-${i}` });
+        const exists = await UserModel.documentExists({ id: `user-${i}` });
         expect(exists).toBe(true);
       }
     });

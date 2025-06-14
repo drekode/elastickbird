@@ -4,12 +4,12 @@ import { ElasticsearchClient } from "../../lib/client/ElasticsearchClient";
 const ELASTICSEARCH_URL = (global as any).ELASTICSEARCH_URL as string;
 
 describe("ElastickbirdModel CRUD Operations", () => {
-  let userModel: ElastickbirdModel;
+  let UserModel: ElastickbirdModel;
   
   beforeEach(async () => {
     ElasticsearchClient.configure({ node: ELASTICSEARCH_URL });
     
-    userModel = new ElastickbirdModel({
+    UserModel = new ElastickbirdModel({
       alias: 'test-users',
       primaryKeyAttribute: 'id',
       mappings: {
@@ -29,10 +29,10 @@ describe("ElastickbirdModel CRUD Operations", () => {
       }
     });
 
-    await userModel.truncateIndex();
+    await UserModel.truncateIndex();
 
     // Add some test data
-    await userModel.indexDocument({
+    await UserModel.indexDocument({
       id: '1',
       name: 'John Doe',
       email: 'john@example.com',
@@ -42,7 +42,7 @@ describe("ElastickbirdModel CRUD Operations", () => {
       createdAt: new Date('2023-01-15')
     });
 
-    await userModel.indexDocument({
+    await UserModel.indexDocument({
       id: '2',
       name: 'Jane Smith',
       email: 'jane@example.com',
@@ -52,14 +52,14 @@ describe("ElastickbirdModel CRUD Operations", () => {
       createdAt: new Date('2023-02-20')
     });
 
-    await userModel.refreshIndex();
+    await UserModel.refreshIndex();
   });
 
   afterEach(async () => {
     try {
-      const exists = await userModel.existsIndex();
+      const exists = await UserModel.existsIndex();
       if (exists) {
-        await userModel.deleteIndex();
+        await UserModel.deleteIndex();
       }
     } catch (e) {
       // Ignore cleanup errors
@@ -79,7 +79,7 @@ describe("ElastickbirdModel CRUD Operations", () => {
         createdAt: new Date('2023-01-15')
       };
 
-      const result = await userModel.indexDocument(user);
+      const result = await UserModel.indexDocument(user);
       
       expect(result.success).toBe(true);
       expect(result.total).toBe(1);
@@ -96,12 +96,12 @@ describe("ElastickbirdModel CRUD Operations", () => {
       };
 
       // First index
-      await userModel.indexDocument(user);
-      await userModel.refreshIndex();
+      await UserModel.indexDocument(user);
+      await UserModel.refreshIndex();
 
       // Update with same ID
       const updatedUser = { ...user, age: 31, name: 'John Smith' };
-      const result = await userModel.indexDocument(updatedUser);
+      const result = await UserModel.indexDocument(updatedUser);
 
       expect(result.success).toBe(true);
       expect(result.result).toBe('updated');
@@ -110,7 +110,7 @@ describe("ElastickbirdModel CRUD Operations", () => {
 
   describe("Document Retrieval", () => {
     test("should get document by ID", async () => {
-      const user = await userModel.getDocumentById({ id: '1' });
+      const user = await UserModel.getDocumentById({ id: '1' });
       
       expect(user).toBeDefined();
       expect(user.id).toBe('1');
@@ -119,8 +119,8 @@ describe("ElastickbirdModel CRUD Operations", () => {
     });
 
     test("should check if document exists", async () => {
-      const exists1 = await userModel.documentExists({ id: '1' });
-      const exists2 = await userModel.documentExists({ id: 'nonexistent' });
+      const exists1 = await UserModel.documentExists({ id: '1' });
+      const exists2 = await UserModel.documentExists({ id: 'nonexistent' });
       
       expect(exists1).toBe(true);
       expect(exists2).toBe(false);
@@ -129,7 +129,7 @@ describe("ElastickbirdModel CRUD Operations", () => {
 
   describe("Document Updates", () => {
     test("should update document", async () => {
-      const result = await userModel.updateDocument({
+      const result = await UserModel.updateDocument({
         id: '1',
         name: 'John Smith',
         age: 31
@@ -139,8 +139,8 @@ describe("ElastickbirdModel CRUD Operations", () => {
       expect((result as any).updated).toBe(1);
 
       // Verify update
-      await userModel.refreshIndex();
-      const updatedUser = await userModel.getDocumentById({ id: '1' });
+      await UserModel.refreshIndex();
+      const updatedUser = await UserModel.getDocumentById({ id: '1' });
       expect(updatedUser.name).toBe('John Smith');
       expect(updatedUser.age).toBe(31);
       expect(updatedUser.email).toBe('john@example.com'); // Should preserve other fields
@@ -149,29 +149,29 @@ describe("ElastickbirdModel CRUD Operations", () => {
 
   describe("Document Deletion", () => {
     test("should delete document", async () => {
-      const result = await userModel.deleteDocument({ id: '1' });
+      const result = await UserModel.deleteDocument({ id: '1' });
 
       expect(result.success).toBe(true);
       expect((result as any).deleted).toBe(1);
 
       // Verify deletion
-      await userModel.refreshIndex();
-      const exists = await userModel.documentExists({ id: '1' });
+      await UserModel.refreshIndex();
+      const exists = await UserModel.documentExists({ id: '1' });
       expect(exists).toBe(false);
     });
   });
 
   describe("Error Handling", () => {
     test("should handle missing ID for operations requiring it", async () => {
-      const resultGet = await userModel.getDocumentById({});
+      const resultGet = await UserModel.getDocumentById({});
       expect(resultGet.success).toBe(false);
       expect(resultGet.error).toContain('Missing primary key field');
 
-      const resultUpdate = await userModel.updateDocument({ name: 'Test' });
+      const resultUpdate = await UserModel.updateDocument({ name: 'Test' });
       expect(resultUpdate.success).toBe(false);
       expect(resultUpdate.error).toContain('Missing primary key field');
 
-      const resultDelete = await userModel.deleteDocument({});
+      const resultDelete = await UserModel.deleteDocument({});
       expect(resultDelete.success).toBe(false);
       expect(resultDelete.error).toContain('Missing primary key field');
     });

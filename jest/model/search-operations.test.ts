@@ -4,12 +4,12 @@ import { ElasticsearchClient } from "../../lib/client/ElasticsearchClient";
 const ELASTICSEARCH_URL = (global as any).ELASTICSEARCH_URL as string;
 
 describe("ElastickbirdModel Search Operations", () => {
-  let userSchema: ElastickbirdModel;
+  let UserModel: ElastickbirdModel;
   
   beforeEach(async () => {
     ElasticsearchClient.configure({ node: ELASTICSEARCH_URL });
     
-    userSchema = new ElastickbirdModel({
+    UserModel = new ElastickbirdModel({
       alias: 'test-search-users',
       primaryKeyAttribute: 'id',
       mappings: {
@@ -29,7 +29,7 @@ describe("ElastickbirdModel Search Operations", () => {
       }
     });
 
-    await userSchema.createIndexIfNotExists();
+    await UserModel.createIndexIfNotExists();
 
     // Seed test data
     const users = [
@@ -63,16 +63,16 @@ describe("ElastickbirdModel Search Operations", () => {
     ];
 
     for (const user of users) {
-      await userSchema.indexDocument(user);
+      await UserModel.indexDocument(user);
     }
-    await userSchema.refreshIndex();
+    await UserModel.refreshIndex();
   });
 
   afterEach(async () => {
     try {
-      const exists = await userSchema.existsIndex();
+      const exists = await UserModel.existsIndex();
       if (exists) {
-        await userSchema.deleteIndex();
+        await UserModel.deleteIndex();
       }
     } catch (e) {
       // Ignore cleanup errors
@@ -82,13 +82,13 @@ describe("ElastickbirdModel Search Operations", () => {
 
   describe("Query Builder", () => {
     test("should create query builder instance", () => {
-      const queryBuilder = userSchema.QueryBuilder();
+      const queryBuilder = UserModel.QueryBuilder();
       expect(queryBuilder).toBeDefined();
       expect(typeof queryBuilder.build).toBe('function');
     });
 
     test("should build and execute complex query", async () => {
-      const queryBuilder = userSchema.QueryBuilder();
+      const queryBuilder = UserModel.QueryBuilder();
       
       queryBuilder
         .addTerm('status', 'active');
@@ -101,7 +101,7 @@ describe("ElastickbirdModel Search Operations", () => {
         .setSize(10)
         .addSort('createdAt', 'desc');
 
-      const searchResults = await userSchema.search(queryBuilder.build());
+      const searchResults = await UserModel.search(queryBuilder.build());
       
       expect(searchResults.count).toBeGreaterThan(0);
       expect(searchResults.rows).toBeDefined();
@@ -109,10 +109,10 @@ describe("ElastickbirdModel Search Operations", () => {
     });
 
     test("should search with terms query", async () => {
-      const queryBuilder = userSchema.QueryBuilder();
+      const queryBuilder = UserModel.QueryBuilder();
       queryBuilder.addTerms('tags', ['developer', 'designer']);
       
-      const results = await userSchema.search(queryBuilder.build());
+      const results = await UserModel.search(queryBuilder.build());
       
       expect(results.count).toBe(2);
       expect(results.rows.length).toBe(2);
@@ -123,10 +123,10 @@ describe("ElastickbirdModel Search Operations", () => {
     });
 
     test("should search with range query", async () => {
-      const queryBuilder = userSchema.QueryBuilder();
+      const queryBuilder = UserModel.QueryBuilder();
       queryBuilder.addRange('age', { gte: 30 });
       
-      const results = await userSchema.search(queryBuilder.build());
+      const results = await UserModel.search(queryBuilder.build());
       
       expect(results.count).toBe(2);
       results.rows.forEach((user: any) => {
@@ -135,20 +135,20 @@ describe("ElastickbirdModel Search Operations", () => {
     });
 
     test("should search with match query", async () => {
-      const queryBuilder = userSchema.QueryBuilder();
+      const queryBuilder = UserModel.QueryBuilder();
       queryBuilder.addMatch('name', 'John');
       
-      const results = await userSchema.search(queryBuilder.build());
+      const results = await UserModel.search(queryBuilder.build());
       
       expect(results.count).toBe(1);
       expect(results.rows[0].name).toBe('John Doe');
     });
 
     test("should handle empty search results", async () => {
-      const queryBuilder = userSchema.QueryBuilder();
+      const queryBuilder = UserModel.QueryBuilder();
       queryBuilder.addTerm('status', 'nonexistent');
       
-      const results = await userSchema.search(queryBuilder.build());
+      const results = await UserModel.search(queryBuilder.build());
       
       expect(results.count).toBe(0);
       expect(results.rows).toEqual([]);
@@ -157,18 +157,18 @@ describe("ElastickbirdModel Search Operations", () => {
 
   describe("Search Options", () => {
     test("should limit search results with size", async () => {
-      const queryBuilder = userSchema.QueryBuilder();
+      const queryBuilder = UserModel.QueryBuilder();
       queryBuilder
         .addTerm('status', 'active')
         .setSize(1);
       
-      const results = await userSchema.search(queryBuilder.build());
+      const results = await UserModel.search(queryBuilder.build());
       
       expect(results.rows.length).toBe(1);
     });
 
     test("should sort search results", async () => {
-      const queryBuilder = userSchema.QueryBuilder();
+      const queryBuilder = UserModel.QueryBuilder();
       queryBuilder.must()
         .addTerm('status', 'active');
       
@@ -176,20 +176,20 @@ describe("ElastickbirdModel Search Operations", () => {
         .setSize(10)
         .addSort('age', 'asc');
       
-      const results = await userSchema.search(queryBuilder.build());
+      const results = await UserModel.search(queryBuilder.build());
       
       expect(results.rows.length).toBe(2);
       expect(results.rows[0].age).toBeLessThanOrEqual(results.rows[1].age);
     });
 
     test("should use pagination with from", async () => {
-      const queryBuilder = userSchema.QueryBuilder();
+      const queryBuilder = UserModel.QueryBuilder();
       queryBuilder
         .setSize(1)
         .setFrom(1)
         .addSort('age', 'asc');
       
-      const results = await userSchema.search(queryBuilder.build());
+      const results = await UserModel.search(queryBuilder.build());
       
       expect(results.rows.length).toBe(1);
       // Should be the second result when sorted by age
@@ -199,12 +199,12 @@ describe("ElastickbirdModel Search Operations", () => {
 
   describe("Boolean Queries", () => {
     test("should use must query", async () => {
-      const queryBuilder = userSchema.QueryBuilder();
+      const queryBuilder = UserModel.QueryBuilder();
       queryBuilder.must()
         .addTerm('status', 'active')
         .addRange('age', { gte: 25, lte: 30 });
       
-      const results = await userSchema.search(queryBuilder.build());
+      const results = await UserModel.search(queryBuilder.build());
       
       expect(results.count).toBe(2);
       results.rows.forEach((user: any) => {
@@ -215,11 +215,11 @@ describe("ElastickbirdModel Search Operations", () => {
     });
 
     test("should use filter query", async () => {
-      const queryBuilder = userSchema.QueryBuilder();
+      const queryBuilder = UserModel.QueryBuilder();
       queryBuilder.filter()
         .addTerm('status', 'active');
       
-      const results = await userSchema.search(queryBuilder.build());
+      const results = await UserModel.search(queryBuilder.build());
       
       expect(results.count).toBe(2);
       results.rows.forEach((user: any) => {
@@ -228,11 +228,11 @@ describe("ElastickbirdModel Search Operations", () => {
     });
 
     test("should use mustNot query", async () => {
-      const queryBuilder = userSchema.QueryBuilder();
+      const queryBuilder = UserModel.QueryBuilder();
       queryBuilder.mustNot()
         .addTerm('status', 'inactive');
       
-      const results = await userSchema.search(queryBuilder.build());
+      const results = await UserModel.search(queryBuilder.build());
       
       expect(results.count).toBe(2);
       results.rows.forEach((user: any) => {
@@ -243,7 +243,7 @@ describe("ElastickbirdModel Search Operations", () => {
 
   describe("Index Statistics", () => {
     test("should get index size", async () => {
-      const stats = await userSchema.getIndexSize();
+      const stats = await UserModel.getIndexSize();
       
       expect(stats).toBeDefined();
       expect(stats.count).toBe(3);

@@ -35,13 +35,13 @@ ElasticsearchClient.configure({
 });
 ```
 
-### 2. Define a Schema
+### 2. Define a Model
 
 ```typescript
-import { ElasticSchema } from '@dresiko/elastickbird';
+import { ElastickbirdModel } from '@dresiko/elastickbird';
 
 // Define your schema
-const userSchema = new ElasticSchema({
+const UserModel = new ElastickbirdModel({
   alias: 'users',
   primaryKeyAttribute: 'id',
   mappings: {
@@ -64,10 +64,10 @@ const userSchema = new ElasticSchema({
 
 ```typescript
 // Create the index
-await userSchema.createIndexIfNotExists();
+await UserModel.createIndexIfNotExists();
 
 // Index a document
-const result = await userSchema.indexDocument({
+const result = await UserModel.indexDocument({
   id: '1',
   name: 'John Doe',
   email: 'john@example.com',
@@ -76,24 +76,24 @@ const result = await userSchema.indexDocument({
 });
 
 // Get a document by ID
-const user = await userSchema.getDocumentById({ id: '1' });
+const user = await UserModel.getDocumentById({ id: '1' });
 
 // Update a document
-await userSchema.updateDocument({
+await UserModel.updateDocument({
   id: '1',
   name: 'John Smith',
   age: 31
 });
 
 // Delete a document
-await userSchema.deleteDocument({ id: '1' });
+await UserModel.deleteDocument({ id: '1' });
 ```
 
 ### 4. Search with Query Builder
 
 ```typescript
 // Create a query builder
-const queryBuilder = userSchema.QueryBuilder();
+const queryBuilder = UserModel.QueryBuilder();
 
 // Build a complex query
 queryBuilder
@@ -105,7 +105,7 @@ queryBuilder
   .addSort('createdAt', 'desc');
 
 // Execute the search
-const searchResults = await userSchema.search(queryBuilder.build());
+const searchResults = await UserModel.search(queryBuilder.build());
 console.log(searchResults.rows); // Array of matching documents
 console.log(searchResults.count); // Total count
 ```
@@ -114,7 +114,7 @@ console.log(searchResults.count); // Total count
 
 ```typescript
 // Initialize bulk operation
-const bulk = userSchema.initBulk({ batchSize: 1000 });
+const bulk = UserModel.initBulk({ batchSize: 1000 });
 
 // Add multiple operations
 bulk.addIndexOperation({ id: '1', name: 'User 1', email: 'user1@example.com' });
@@ -131,7 +131,7 @@ console.log(bulkResult.success); // true if all operations succeeded
 ### Routing
 
 ```typescript
-const schema = new ElasticSchema({
+const schema = new ElastickbirdModel({
   alias: 'orders',
   routing: 'customerId', // Route documents by customer ID
   mappings: {
@@ -158,7 +158,7 @@ const filterRules = new ElasticsearchFilterRules({
   }
 });
 
-const schema = new ElasticSchema({
+const schema = new ElastickbirdModel({
   alias: 'users',
   filterRules,
   mappings: { /* ... */ }
@@ -173,7 +173,7 @@ queryBuilder.applyFilters('active-users,recent');
 
 ```typescript
 // Initialize bulk queue for auto-batching
-const bulkQueue = userSchema.initBulkQueue({ batchSize: 500 });
+const bulkQueue = UserModel.initBulkQueue({ batchSize: 500 });
 
 // Add operations - they'll be automatically batched and executed
 bulkQueue.addOperationsToQueue('index', [
@@ -188,7 +188,7 @@ const result = await bulkQueue.waitForCompletion();
 
 ## API Reference
 
-### ElasticSchema
+### ElastickbirdModel
 
 The main class for defining and working with Elasticsearch indices.
 
