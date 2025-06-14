@@ -34,4 +34,11 @@ export class ElasticsearchClient {
   static setClient(client: Client): void {
     ElasticsearchClient.instance = client;
   }
+
+  /**
+   * Reset the client instance (useful for testing)
+   */
+  static reset(): void {
+    ElasticsearchClient.instance = null as any;
+  }
 } 

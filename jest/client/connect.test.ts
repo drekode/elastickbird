@@ -1,28 +1,36 @@
-import ElastickBird from "../../lib/elastickbird";
-import type ElastickBirdClient from "../../lib/client/client";
-import ElastickBirdClientClass from "../../lib/client/client";
-import { Client as NativeClient } from "@elastic/elasticsearch"
+import { ElasticsearchClient } from "../../lib/client/ElasticsearchClient";
+import { Client as NativeClient } from "@elastic/elasticsearch";
 
 const ELASTICSEARCH_URL = (global as any).ELASTICSEARCH_URL as string;
 
-test("Connect method is a function", () => {
-  const connect = ElastickBird.connect;
-  expect(connect).toBeInstanceOf(Function);
-});
+describe("Elasticsearch Client", () => {
+  afterEach(() => {
+    // Reset client after each test
+    ElasticsearchClient.reset();
+  });
 
-test("Connect without specifiying a node should throw missing node option", () => {
-  const connect = ElastickBird.connect;
-  expect(() => connect({})).toThrow("Missing node(s) option");
-});
+  test("should configure client with node URL", () => {
+    ElasticsearchClient.configure({ node: ELASTICSEARCH_URL });
+    const client = ElasticsearchClient.getClient();
+    expect(client).toBeInstanceOf(NativeClient);
+  });
 
-test("Connect using an invalid node URL should throw invalid URL error", () => {
-  const connect = ElastickBird.connect;
-  expect(() => connect({ node: "test-node-url" })).toThrow("Invalid URL");
-});
+  test("should throw error when getting client without configuration", () => {
+    expect(() => ElasticsearchClient.getClient()).toThrow("Elasticsearch client not configured");
+  });
 
-test("Connect to elasticsearch", () => {
-  const connect = ElastickBird.connect;
-  const elastickbirdClient = connect({ node: ELASTICSEARCH_URL }) as ElastickBirdClient;
-  expect(elastickbirdClient).toBeInstanceOf(ElastickBirdClientClass);
-  expect(elastickbirdClient.client).toBeInstanceOf(NativeClient);
+  test("should connect to Elasticsearch and ping successfully", async () => {
+    ElasticsearchClient.configure({ node: ELASTICSEARCH_URL });
+    const client = ElasticsearchClient.getClient();
+    
+    const response = await client.ping();
+    expect(response).toBe(true);
+  });
+
+  test("should return same client instance (singleton)", () => {
+    ElasticsearchClient.configure({ node: ELASTICSEARCH_URL });
+    const client1 = ElasticsearchClient.getClient();
+    const client2 = ElasticsearchClient.getClient();
+    expect(client1).toBe(client2);
+  });
 });
