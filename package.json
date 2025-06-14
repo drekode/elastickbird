@@ -13,7 +13,7 @@
     "test": "jest ./jest/**/*.test.ts",
     "test:watch": "jest ./jest/**/*.test.ts --watch",
     "test:client": "jest ./jest/client/*.test.ts",
-    "test:schema": "jest ./jest/schema/*.test.ts",
+    "test:model": "jest ./jest/model/*.test.ts",
     "test:coverage": "jest ./jest/**/*.test.ts --coverage",
     "docker:up": "docker compose -f ./jest/docker-compose.yml up -d --quiet-pull",
     "docker:down": "docker compose -f ./jest/docker-compose.yml down",

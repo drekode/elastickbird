@@ -1,4 +1,4 @@
-import { ElasticSchema, ElasticsearchClient } from '../lib';
+import { ElastickbirdModel, ElasticsearchClient } from '../lib';
 
 // Configure Elasticsearch client
 ElasticsearchClient.configure({
@@ -11,7 +11,7 @@ ElasticsearchClient.configure({
 });
 
 // Define a user schema
-const userSchema = new ElasticSchema({
+const userSchema = new ElastickbirdModel({
   alias: 'users',
   primaryKeyAttribute: 'id',
   mappings: {

@@ -1,15 +1,15 @@
-import { ElasticSchema } from "../../lib/schema/ElasticSchema";
+import { ElastickbirdModel } from "../../lib/schema/ElasticSchema";
 import { ElasticsearchClient } from "../../lib/client/ElasticsearchClient";
 
 const ELASTICSEARCH_URL = (global as any).ELASTICSEARCH_URL as string;
 
-describe("ElasticSchema Bulk Operations", () => {
-  let userSchema: ElasticSchema;
+describe("ElastickbirdModel Bulk Operations", () => {
+  let userSchema: ElastickbirdModel;
   
   beforeEach(async () => {
     ElasticsearchClient.configure({ node: ELASTICSEARCH_URL });
     
-    userSchema = new ElasticSchema({
+    userSchema = new ElastickbirdModel({
       alias: 'test-bulk-users',
       primaryKeyAttribute: 'id',
       mappings: {

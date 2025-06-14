@@ -9,16 +9,16 @@ import {
 import { ElasticSchemaConfig, DocumentOperationResult, ByQueryOperationResult } from '../types';
 
 /**
- * A class for managing Elasticsearch indices, mappings, settings, and document operations.
+ * ElastickbirdModel - A class for managing Elasticsearch indices, mappings, settings, and document operations.
  * Provides functionality to interact with Elasticsearch via CRUD operations, bulk operations, and more.
  */
-export class ElasticSchema {
+export class ElastickbirdModel {
   private schema: ElasticSchemaConfig;
 
-  /**
-   * Creates an instance of ElasticSchema.
-   * @param schema - The schema configuration for the Elasticsearch index.
-   */
+     /**
+    * Creates an instance of ElastickbirdModel.
+    * @param schema - The schema configuration for the Elasticsearch index.
+    */
   constructor(schema: ElasticSchemaConfig) {
     const defaultsSchema: Partial<ElasticSchemaConfig> = {
       primaryKeyAttribute: "id",

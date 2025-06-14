@@ -1,3 +1,3 @@
-import { ElasticSchema } from './schema/ElasticSchema';
+import { ElastickbirdModel } from './schema/ElasticSchema';
 
-export default ElasticSchema;
+export default ElastickbirdModel;

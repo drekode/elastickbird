@@ -1,16 +1,16 @@
-import { ElasticSchema } from "../../lib/schema/ElasticSchema";
+import { ElastickbirdModel } from "../../lib/schema/ElasticSchema";
 import { ElasticsearchClient } from "../../lib/client/ElasticsearchClient";
 
 const ELASTICSEARCH_URL = (global as any).ELASTICSEARCH_URL as string;
 
-describe("ElasticSchema Initialization", () => {
+describe("ElastickbirdModel Initialization", () => {
   beforeEach(() => {
     ElasticsearchClient.configure({ node: ELASTICSEARCH_URL });
   });
 
   afterEach(async () => {
     // Cleanup any test indices
-    const testSchema = new ElasticSchema({ 
+    const testSchema = new ElastickbirdModel({ 
       alias: "test-example",
       mappings: { properties: {} }
     });
@@ -25,8 +25,8 @@ describe("ElasticSchema Initialization", () => {
     ElasticsearchClient.reset();
   });
 
-  test("should create ElasticSchema instance", () => {
-    const schema = new ElasticSchema({ 
+  test("should create ElastickbirdModel instance", () => {
+    const schema = new ElastickbirdModel({ 
       alias: "test-example",
       mappings: {
         properties: {
@@ -35,12 +35,12 @@ describe("ElasticSchema Initialization", () => {
         }
       }
     });
-    expect(schema).toBeInstanceOf(ElasticSchema);
+    expect(schema).toBeInstanceOf(ElastickbirdModel);
   });
 
   test("should throw error when creating index without client connection", () => {
     ElasticsearchClient.reset();
-    const schema = new ElasticSchema({ 
+    const schema = new ElastickbirdModel({ 
       alias: "test-example",
       mappings: { properties: {} }
     });
@@ -48,7 +48,7 @@ describe("ElasticSchema Initialization", () => {
   });
 
   test("should create index successfully", async () => {
-    const schema = new ElasticSchema({ 
+    const schema = new ElastickbirdModel({ 
       alias: "test-example",
       mappings: {
         properties: {
@@ -69,7 +69,7 @@ describe("ElasticSchema Initialization", () => {
   });
 
   test("should handle createIndexIfNotExists", async () => {
-    const schema = new ElasticSchema({ 
+    const schema = new ElastickbirdModel({ 
       alias: "test-example",
       mappings: {
         properties: {
