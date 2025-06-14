@@ -19,7 +19,7 @@ import { QueryBuilderOptions } from '../types';
  * It's recommended to start the query with the routing field to ensure the routing value is set correctly.
  * Note: The routing value will be used only if the routing field is set in the constructor.
  */
-export class ElasticsearchQueryBuilder {
+export class ElastickbirdQuery {
   private query: { bool: Record<string, any> };
   private boolQueryBuilder: BoolQueryBuilder;
   private defaultOccurrence: OccurrenceQueryBuilder;
@@ -74,7 +74,7 @@ export class ElasticsearchQueryBuilder {
   ];
 
   /**
-   * Creates a new ElasticsearchQueryBuilder
+   * Creates a new ElastickbirdQuery
    * @param options - Configuration options
    */
   constructor({

@@ -1,6 +1,6 @@
 export class BoolQueryBuilder {
   private boolRef: Record<string, any>;
-  private base: any; // ElasticsearchQueryBuilder - will be properly typed later
+  private base: any; // ElastickbirdQuery - will be properly typed later
   private mustBuilder?: OccurrenceQueryBuilder;
   private shouldBuilder?: OccurrenceQueryBuilder;
   private filterBuilder?: OccurrenceQueryBuilder;
@@ -72,7 +72,7 @@ export class BoolQueryBuilder {
 
 export class OccurrenceQueryBuilder {
   private occurrRef: any[];
-  private base: any; // ElasticsearchQueryBuilder - will be properly typed later
+  private base: any; // ElastickbirdQuery - will be properly typed later
 
   constructor(ref: any[], base: any) {
     this.occurrRef = ref;

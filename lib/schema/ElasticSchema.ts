@@ -1,5 +1,5 @@
 import { ElasticsearchClient } from '../client/ElasticsearchClient';
-import { ElasticsearchQueryBuilder } from '../query/ElasticsearchQueryBuilder';
+import { ElastickbirdQuery } from '../query/ElasticsearchQueryBuilder';
 import { ElasticsearchBulk } from '../bulk/ElasticsearchBulk';
 import { ElasticsearchBulkQueue } from '../bulk/ElasticsearchBulkQueue';
 import { 
@@ -392,8 +392,8 @@ export class ElastickbirdModel {
    * Creates a query builder instance for this schema.
    * @returns A new query builder instance.
    */
-  QueryBuilder(): ElasticsearchQueryBuilder {
-    return new ElasticsearchQueryBuilder({
+  QueryBuilder(): ElastickbirdQuery {
+    return new ElastickbirdQuery({
       sortRules: this.schema.sortRules,
       filterRules: this.schema.filterRules,
       routing: this.schema.routing,

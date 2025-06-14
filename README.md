@@ -229,7 +229,7 @@ interface ElasticSchemaConfig {
 - `initBulk(options?)` - Initialize bulk operations
 - `initBulkQueue(options?)` - Initialize auto-batching bulk queue
 
-### ElasticsearchQueryBuilder
+### ElastickbirdQuery
 
 Fluent API for building Elasticsearch queries.
 
