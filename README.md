@@ -93,7 +93,7 @@ await UserModel.deleteDocument({ id: '1' });
 
 ```typescript
 // Create a query builder
-const queryBuilder = UserModel.QueryBuilder();
+const queryBuilder = UserModel.initQueryBuilder();
 
 // Build a complex query
 queryBuilder
@@ -165,7 +165,7 @@ const schema = new ElastickbirdModel({
 });
 
 // Use filter rules in queries
-const queryBuilder = schema.QueryBuilder();
+const queryBuilder = schema.initQueryBuilder();
 queryBuilder.applyFilters('active-users,recent');
 ```
 
@@ -225,7 +225,7 @@ interface ElasticSchemaConfig {
 - `updateByQuery(params)` - Update documents by query
 - `documentExists(payload)` - Check if document exists
 - `getDocument(payload)` - Get document by payload
-- `QueryBuilder()` - Create a new query builder
+- `initQueryBuilder()` - Create a new query builder
 - `initBulk(options?)` - Initialize bulk operations
 - `initBulkQueue(options?)` - Initialize auto-batching bulk queue
 

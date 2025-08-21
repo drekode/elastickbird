@@ -82,13 +82,13 @@ describe("ElastickbirdModel Search Operations", () => {
 
   describe("Query Builder", () => {
     test("should create query builder instance", () => {
-      const queryBuilder = UserModel.QueryBuilder();
+      const queryBuilder = UserModel.initQueryBuilder();
       expect(queryBuilder).toBeDefined();
       expect(typeof queryBuilder.build).toBe('function');
     });
 
     test("should build and execute complex query", async () => {
-      const queryBuilder = UserModel.QueryBuilder();
+      const queryBuilder = UserModel.initQueryBuilder();
       
       queryBuilder
         .addTerm('status', 'active');
@@ -109,7 +109,7 @@ describe("ElastickbirdModel Search Operations", () => {
     });
 
     test("should search with terms query", async () => {
-      const queryBuilder = UserModel.QueryBuilder();
+      const queryBuilder = UserModel.initQueryBuilder();
       queryBuilder.addTerms('tags', ['developer', 'designer']);
       
       const results = await UserModel.search(queryBuilder.build());
@@ -123,7 +123,7 @@ describe("ElastickbirdModel Search Operations", () => {
     });
 
     test("should search with range query", async () => {
-      const queryBuilder = UserModel.QueryBuilder();
+      const queryBuilder = UserModel.initQueryBuilder();
       queryBuilder.addRange('age', { gte: 30 });
       
       const results = await UserModel.search(queryBuilder.build());
@@ -135,7 +135,7 @@ describe("ElastickbirdModel Search Operations", () => {
     });
 
     test("should search with match query", async () => {
-      const queryBuilder = UserModel.QueryBuilder();
+      const queryBuilder = UserModel.initQueryBuilder();
       queryBuilder.addMatch('name', 'John');
       
       const results = await UserModel.search(queryBuilder.build());
@@ -145,7 +145,7 @@ describe("ElastickbirdModel Search Operations", () => {
     });
 
     test("should handle empty search results", async () => {
-      const queryBuilder = UserModel.QueryBuilder();
+      const queryBuilder = UserModel.initQueryBuilder();
       queryBuilder.addTerm('status', 'nonexistent');
       
       const results = await UserModel.search(queryBuilder.build());
@@ -157,7 +157,7 @@ describe("ElastickbirdModel Search Operations", () => {
 
   describe("Search Options", () => {
     test("should limit search results with size", async () => {
-      const queryBuilder = UserModel.QueryBuilder();
+      const queryBuilder = UserModel.initQueryBuilder();
       queryBuilder
         .addTerm('status', 'active')
         .setSize(1);
@@ -168,7 +168,7 @@ describe("ElastickbirdModel Search Operations", () => {
     });
 
     test("should sort search results", async () => {
-      const queryBuilder = UserModel.QueryBuilder();
+      const queryBuilder = UserModel.initQueryBuilder();
       queryBuilder.must()
         .addTerm('status', 'active');
       
@@ -183,7 +183,7 @@ describe("ElastickbirdModel Search Operations", () => {
     });
 
     test("should use pagination with from", async () => {
-      const queryBuilder = UserModel.QueryBuilder();
+      const queryBuilder = UserModel.initQueryBuilder();
       queryBuilder
         .setSize(1)
         .setFrom(1)
@@ -199,7 +199,7 @@ describe("ElastickbirdModel Search Operations", () => {
 
   describe("Boolean Queries", () => {
     test("should use must query", async () => {
-      const queryBuilder = UserModel.QueryBuilder();
+      const queryBuilder = UserModel.initQueryBuilder();
       queryBuilder.must()
         .addTerm('status', 'active')
         .addRange('age', { gte: 25, lte: 30 });
@@ -215,7 +215,7 @@ describe("ElastickbirdModel Search Operations", () => {
     });
 
     test("should use filter query", async () => {
-      const queryBuilder = UserModel.QueryBuilder();
+      const queryBuilder = UserModel.initQueryBuilder();
       queryBuilder.filter()
         .addTerm('status', 'active');
       
@@ -228,7 +228,7 @@ describe("ElastickbirdModel Search Operations", () => {
     });
 
     test("should use mustNot query", async () => {
-      const queryBuilder = UserModel.QueryBuilder();
+      const queryBuilder = UserModel.initQueryBuilder();
       queryBuilder.mustNot()
         .addTerm('status', 'inactive');
       

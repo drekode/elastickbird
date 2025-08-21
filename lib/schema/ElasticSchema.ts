@@ -392,7 +392,7 @@ export class ElastickbirdModel {
    * Creates a query builder instance for this schema.
    * @returns A new query builder instance.
    */
-  QueryBuilder(): ElastickbirdQuery {
+  initQueryBuilder(): ElastickbirdQuery {
     return new ElastickbirdQuery({
       sortRules: this.schema.sortRules,
       filterRules: this.schema.filterRules,

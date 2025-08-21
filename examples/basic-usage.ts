@@ -90,7 +90,7 @@ async function basicExample() {
     console.log('✏️ Updated user:', updateResult.success);
 
     // Search with query builder
-    const queryBuilder = UserModel.QueryBuilder();
+    const queryBuilder = UserModel.initQueryBuilder();
     
     // Build a complex query
     queryBuilder
@@ -111,7 +111,7 @@ async function basicExample() {
     });
 
     // Search for users with specific tags
-    const tagQuery = UserModel.QueryBuilder();
+    const tagQuery = UserModel.initQueryBuilder();
     tagQuery.addTerms('tags', ['developer', 'designer']);
     
     const tagResults = await UserModel.search(tagQuery.build());
