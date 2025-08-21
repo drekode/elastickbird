@@ -15,7 +15,7 @@ A high-level Elasticsearch driver for Node.js, inspired by Mongoose and Sequeliz
 ## Installation
 
 ```bash
-npm install @dresiko/elastickbird
+npm install elastickbird
 ```
 
 ## Quick Start
@@ -23,7 +23,7 @@ npm install @dresiko/elastickbird
 ### 1. Configure Elasticsearch Client
 
 ```typescript
-import { ElasticsearchClient } from '@dresiko/elastickbird';
+import { ElasticsearchClient } from 'elastickbird';
 
 // Configure the Elasticsearch client
 ElasticsearchClient.configure({
