@@ -413,7 +413,7 @@ export class ElastickbirdModel {
    * Creates a query builder instance for this schema.
    * @returns A new query builder instance.
    */
-  initQueryBuilder(): ElastickbirdQuery {
+  query(): ElastickbirdQuery {
     return new ElastickbirdQuery({ model: this});
   }
 
