@@ -224,7 +224,7 @@ interface ElasticSchemaConfig {
 - `deleteByQuery(params)` - Delete documents by query
 - `updateByQuery(params)` - Update documents by query
 - `documentExists(payload)` - Check if document exists
-- `getDocument(payload)` - Get document by ID
+- `getDocument(payload)` - Get document by payload
 - `QueryBuilder()` - Create a new query builder
 - `initBulk(options?)` - Initialize bulk operations
 - `initBulkQueue(options?)` - Initialize auto-batching bulk queue
