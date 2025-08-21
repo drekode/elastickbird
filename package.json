@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dresikode/elastickbird.git"
+    "url": "https://github.com/drekode/elastickbird.git"
   },
   "keywords": [
     "elasticsearch",
@@ -16,7 +16,7 @@
     "query",
     "nodejs"
   ],
-  "author": "Dresikode",
+  "author": "Drekode",
   "license": "Apache-2.0",
   "files": [
     "dist/**",
