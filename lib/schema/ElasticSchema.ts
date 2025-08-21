@@ -546,7 +546,7 @@ export class ElastickbirdModel {
   }
 
   /**
-   * Retrieves a document from Elasticsearch by ID.
+   * Retrieves a document from Elasticsearch by payload.
    * @param payload - The document payload to retrieve.
    * @returns The document source or an error if ID is missing.
    */
@@ -560,6 +560,26 @@ export class ElastickbirdModel {
     };
     this.setRouting(request, payload);
 
+    const client = ElasticsearchClient.getClient();
+    const result = await client.get(request);
+    return result?._source;
+  }
+
+  /** 
+   * Retrieves a document from Elasticsearch by ID.
+   * @param id - The ID of the document to retrieve.
+   * @returns The document source or an error if ID is missing.
+   */
+  async getDocumentById(id: string): Promise<any | DocumentOperationResult> {
+    if (!id) return {
+      success: false,
+      error: "ID is required",
+      total: 0
+    }
+    const request: any = {
+      index: this.getAlias(),
+      id
+    };
     const client = ElasticsearchClient.getClient();
     const result = await client.get(request);
     return result?._source;

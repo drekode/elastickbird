@@ -109,8 +109,17 @@ describe("ElastickbirdModel CRUD Operations", () => {
   });
 
   describe("Document Retrieval", () => {
-    test("should get document by ID", async () => {
+    test("should get document by payload", async () => {
       const user = await UserModel.getDocument({ id: '1' });
+      
+      expect(user).toBeDefined();
+      expect(user.id).toBe('1');
+      expect(user.name).toBe('John Doe');
+      expect(user.email).toBe('john@example.com');
+    });
+
+    test("should get document by ID", async () => {
+      const user = await UserModel.getDocumentById('1');
       
       expect(user).toBeDefined();
       expect(user.id).toBe('1');
