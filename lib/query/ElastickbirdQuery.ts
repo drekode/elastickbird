@@ -1,4 +1,4 @@
-import { BoolQueryBuilder, OccurrenceQueryBuilder } from './BoolQueryBuilder';
+import { BoolQuery, OccurrenceQuery } from './BoolQuery';
 import { ElasticsearchFilterRules } from '../utils/ElasticsearchFilterRules';
 import { QueryBuilderOptions } from '../types';
 import { ElastickbirdModel } from '../model/ElastickbirdModel';
@@ -23,8 +23,8 @@ import { ElastickbirdModel } from '../model/ElastickbirdModel';
 export class ElastickbirdQuery {
   private model: ElastickbirdModel;
   private query: { bool: Record<string, any> };
-  private boolQueryBuilder: BoolQueryBuilder;
-  private defaultOccurrence: OccurrenceQueryBuilder;
+  private boolQueryBuilder: BoolQuery;
+  private defaultOccurrence: OccurrenceQuery;
   private size: number;
   private sort: any[];
   private searchAfter: any[];
@@ -47,10 +47,10 @@ export class ElastickbirdQuery {
   public addCustomClause!: (clause: any) => this;
   public addQueryString!: (query: string, options?: any) => this;
   public applyFilters!: (filters?: any) => this;
-  public must!: () => OccurrenceQueryBuilder;
-  public should!: (options?: { minimumShouldMatch?: number }) => OccurrenceQueryBuilder;
-  public filter!: () => OccurrenceQueryBuilder;
-  public mustNot!: () => OccurrenceQueryBuilder;
+  public must!: () => OccurrenceQuery;
+  public should!: (options?: { minimumShouldMatch?: number }) => OccurrenceQuery;
+  public filter!: () => OccurrenceQuery;
+  public mustNot!: () => OccurrenceQuery;
 
   readonly OCCURRENCE_TYPES: string[] = ["must", "should", "filter", "mustNot"];
   readonly OCCURRENCE_QUERY_METHODS: string[] = [
@@ -86,7 +86,7 @@ export class ElastickbirdQuery {
     this.model = model;
     this.query = { bool: {} };
     // create the base bool query builder
-    this.boolQueryBuilder = new BoolQueryBuilder(this.query.bool, this);
+    this.boolQueryBuilder = new BoolQuery(this.query.bool, this);
     // create the default occurrence (must) query builder
     this.defaultOccurrence = this.boolQueryBuilder.must();
     // default values

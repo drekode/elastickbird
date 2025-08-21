@@ -1,10 +1,10 @@
-export class BoolQueryBuilder {
+export class BoolQuery {
   private boolRef: Record<string, any>;
   private base: any; // ElastickbirdQuery - will be properly typed later
-  private mustBuilder?: OccurrenceQueryBuilder;
-  private shouldBuilder?: OccurrenceQueryBuilder;
-  private filterBuilder?: OccurrenceQueryBuilder;
-  private mustNotBuilder?: OccurrenceQueryBuilder;
+  private mustBuilder?: OccurrenceQuery;
+  private shouldBuilder?: OccurrenceQuery;
+  private filterBuilder?: OccurrenceQuery;
+  private mustNotBuilder?: OccurrenceQuery;
 
   constructor(ref: Record<string, any>, base: any) {
     this.boolRef = ref;
@@ -20,12 +20,12 @@ export class BoolQueryBuilder {
 
   /**
    * Must occurrence
-   * @returns OccurrenceQueryBuilder
+   * @returns OccurrenceQuery
    */
-  must(): OccurrenceQueryBuilder {
+  must(): OccurrenceQuery {
     if (!this.mustBuilder) {
       this.boolRef.must = [];
-      this.mustBuilder = new OccurrenceQueryBuilder(this.boolRef.must, this.base);
+      this.mustBuilder = new OccurrenceQuery(this.boolRef.must, this.base);
     }
     return this.mustBuilder;
   }
@@ -34,43 +34,43 @@ export class BoolQueryBuilder {
    * Should occurrence
    * @param options - Configuration options
    * @param options.minimumShouldMatch - Minimum number of should clauses that must match
-   * @returns OccurrenceQueryBuilder
+   * @returns OccurrenceQuery
    */
-  should({ minimumShouldMatch = 1 }: { minimumShouldMatch?: number } = {}): OccurrenceQueryBuilder {
+  should({ minimumShouldMatch = 1 }: { minimumShouldMatch?: number } = {}): OccurrenceQuery {
     if (!this.shouldBuilder) {
       this.boolRef.minimum_should_match = minimumShouldMatch;
       this.boolRef.should = [];
-      this.shouldBuilder = new OccurrenceQueryBuilder(this.boolRef.should, this.base);
+      this.shouldBuilder = new OccurrenceQuery(this.boolRef.should, this.base);
     }
     return this.shouldBuilder;
   }
 
   /**
    * Filter occurrence
-   * @returns OccurrenceQueryBuilder
+   * @returns OccurrenceQuery
    */
-  filter(): OccurrenceQueryBuilder {
+  filter(): OccurrenceQuery {
     if (!this.filterBuilder) {
       this.boolRef.filter = [];
-      this.filterBuilder = new OccurrenceQueryBuilder(this.boolRef.filter, this.base);
+      this.filterBuilder = new OccurrenceQuery(this.boolRef.filter, this.base);
     }
     return this.filterBuilder;
   }
 
   /**
    * Must Not occurrence
-   * @returns OccurrenceQueryBuilder
+   * @returns OccurrenceQuery
    */
-  mustNot(): OccurrenceQueryBuilder {
+  mustNot(): OccurrenceQuery {
     if (!this.mustNotBuilder) {
       this.boolRef.must_not = [];
-      this.mustNotBuilder = new OccurrenceQueryBuilder(this.boolRef.must_not, this.base);
+      this.mustNotBuilder = new OccurrenceQuery(this.boolRef.must_not, this.base);
     }
     return this.mustNotBuilder;
   }
 }
 
-export class OccurrenceQueryBuilder {
+export class OccurrenceQuery {
   private occurrRef: any[];
   private base: any; // ElastickbirdQuery - will be properly typed later
 
@@ -253,11 +253,11 @@ export class OccurrenceQueryBuilder {
 
   /**
    * Create a nested bool query
-   * @returns BoolQueryBuilder
+   * @returns BoolQuery
    */
-  bool(): BoolQueryBuilder {
+  bool(): BoolQuery {
     const boolRef: Record<string, any> = {};
     this.occurrRef.push({ bool: boolRef });
-    return new BoolQueryBuilder(boolRef, this.base);
+    return new BoolQuery(boolRef, this.base);
   }
 } 
