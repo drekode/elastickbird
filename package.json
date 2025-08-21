@@ -1,5 +1,5 @@
 {
-  "name": "@dresiko/elastickbird",
+  "name": "elastickbird",
   "version": "0.0.1",
   "description": "elasticsearch object modeling for nodejs",
   "main": "dist/index.js",
