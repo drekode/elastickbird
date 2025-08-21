@@ -4,6 +4,10 @@
   "description": "elasticsearch object modeling for nodejs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dresiko/elastickbird.git"
+  },
   "author": "Dresiko",
   "license": "Apache-2.0",
   "scripts": {
