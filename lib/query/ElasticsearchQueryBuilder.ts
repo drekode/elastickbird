@@ -30,7 +30,7 @@ export class ElastickbirdQuery {
   private searchAfter: any[];
   private searchAfterDelimiter?: string;
   private from: number;
-  private sortRules: Record<string, (queryBuilder: any, order: string) => void>;
+  private sortRules: Record<string, (query: any, order: string) => void>;
   private filterRules: ElasticsearchFilterRules;
   private routing?: string;
   private routingRules?: Record<string, (value: any) => string>;
@@ -141,7 +141,7 @@ export class ElastickbirdQuery {
    * @param ruleId - The filter rule ID
    * @returns The filter rule function
    */
-  getFilterRule(ruleId: string): ((queryBuilder: any, value: any) => void) | undefined {
+  getFilterRule(ruleId: string): ((query: any, value: any) => void) | undefined {
     return this.filterRules.getFilterRule(ruleId);
   }
 

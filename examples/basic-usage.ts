@@ -90,21 +90,20 @@ async function basicExample() {
     console.log('✏️ Updated user:', updateResult.success);
 
     // Search with query builder
-    const queryBuilder = UserModel.query();
+    const query = UserModel.query();
     
     // Build a complex query
-    queryBuilder
-      .addTerm('status', 'active');
+    query.addTerm('status', 'active');
     
-    queryBuilder.should({ minimumShouldMatch: 1 })
+    query.should({ minimumShouldMatch: 1 })
       .addMatch('name', 'john')
       .addRange('age', { gte: 25, lte: 35 });
       
-    queryBuilder
+    query
       .setSize(10)
       .addSort('createdAt', 'desc');
 
-    const searchResults = await UserModel.search(queryBuilder.build());
+    const searchResults = await UserModel.search(query.build());
     console.log('🔍 Search results:', {
       count: searchResults.count,
       users: searchResults.rows

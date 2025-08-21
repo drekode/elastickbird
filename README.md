@@ -93,10 +93,10 @@ await UserModel.deleteDocument({ id: '1' });
 
 ```typescript
 // Create a query builder
-const queryBuilder = UserModel.query();
+const query = UserModel.query();
 
 // Build a complex query
-queryBuilder
+query
   .addTerm('status', 'active')
   .should({ minimumShouldMatch: 1 })
     .addMatch('name', 'john')
@@ -105,7 +105,7 @@ queryBuilder
   .addSort('createdAt', 'desc');
 
 // Execute the search
-const searchResults = await UserModel.search(queryBuilder.build());
+const searchResults = await UserModel.search(query.build());
 console.log(searchResults.rows); // Array of matching documents
 console.log(searchResults.count); // Total count
 ```
@@ -150,23 +150,23 @@ const schema = new ElastickbirdModel({
 import { ElasticsearchFilterRules } from 'elastickbird';
 
 const filterRules = new ElasticsearchFilterRules({
-  'active-users': (queryBuilder) => {
-    queryBuilder.addTerm('status', 'active');
+  'active-users': (query) => {
+    query.addTerm('status', 'active');
   },
-  'recent': (queryBuilder) => {
-    queryBuilder.addRange('createdAt', { gte: 'now-7d' });
+  'recent': (query) => {
+    query.addRange('createdAt', { gte: 'now-7d' });
   }
 });
 
-const schema = new ElastickbirdModel({
+const model = new ElastickbirdModel({
   alias: 'users',
   filterRules,
   mappings: { /* ... */ }
 });
 
 // Use filter rules in queries
-const queryBuilder = schema.query();
-queryBuilder.applyFilters('active-users,recent');
+const query = model.query();
+query.applyFilters('active-users,recent');
 ```
 
 ### Bulk Queue (Auto-batching)
@@ -204,7 +204,7 @@ interface ElasticSchemaConfig {
   routing?: string;                 // Routing field
   routingRules?: Record<string, (value: any) => string>;
   filterRules?: ElasticsearchFilterRules;
-  sortRules?: Record<string, (queryBuilder: any, order: string) => void>;
+  sortRules?: Record<string, (query: any, order: string) => void>;
   searchAfterDelimiter?: string;    // Delimiter for search-after (default: '~')
 }
 ```

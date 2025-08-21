@@ -1,5 +1,5 @@
 export class ElasticsearchFilterRules {
-  private filterRules: Record<string, (queryBuilder: any, value: any) => void>;
+  private filterRules: Record<string, (query: any, value: any) => void>;
 
   static readonly ELASTICSEARCH_OPERATORS = {
     and: "filter",
@@ -7,7 +7,7 @@ export class ElasticsearchFilterRules {
     not: "mustNot"
   } as const;
 
-  constructor(filterRules: Record<string, (queryBuilder: any, value: any) => void> = {}) {
+  constructor(filterRules: Record<string, (query: any, value: any) => void> = {}) {
     this.filterRules = filterRules;
   }
 
@@ -88,11 +88,11 @@ export class ElasticsearchFilterRules {
     return result;
   }
 
-  getFilterRule(ruleId: string): ((queryBuilder: any, value: any) => void) | undefined {
+  getFilterRule(ruleId: string): ((query: any, value: any) => void) | undefined {
     return this.filterRules[ruleId];
   }
 
-  getFilterRules(): Record<string, (queryBuilder: any, value: any) => void> {
+  getFilterRules(): Record<string, (query: any, value: any) => void> {
     return this.filterRules;
   }
 

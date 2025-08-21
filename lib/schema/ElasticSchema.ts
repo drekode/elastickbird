@@ -136,7 +136,7 @@ export class ElastickbirdModel {
     return this.schema.alias;
   }
 
-  getSortRules(): Record<string, (queryBuilder: any, order: string) => void> {
+  getSortRules(): Record<string, (query: any, order: string) => void> {
     return this.schema.sortRules || {};
   }
 

@@ -9,7 +9,7 @@ export interface ElasticSchemaConfig {
   routing?: string;
   routingRules?: Record<string, (value: any) => string>;
   filterRules?: any;
-  sortRules?: Record<string, (queryBuilder: any, order: string) => void>;
+  sortRules?: Record<string, (query: any, order: string) => void>;
   searchAfterDelimiter?: string;
 }
 
