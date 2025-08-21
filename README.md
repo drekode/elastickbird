@@ -38,7 +38,7 @@ ElasticsearchClient.configure({
 ### 2. Define a Model
 
 ```typescript
-import { ElastickbirdModel } from '@dresiko/elastickbird';
+import { ElastickbirdModel } from 'elastickbird';
 
 // Define your schema
 const UserModel = new ElastickbirdModel({
@@ -147,7 +147,7 @@ const schema = new ElastickbirdModel({
 ### Filter Rules
 
 ```typescript
-import { ElasticsearchFilterRules } from '@dresiko/elastickbird';
+import { ElasticsearchFilterRules } from 'elastickbird';
 
 const filterRules = new ElasticsearchFilterRules({
   'active-users': (queryBuilder) => {
