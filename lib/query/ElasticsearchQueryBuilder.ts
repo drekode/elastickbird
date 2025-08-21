@@ -1,6 +1,7 @@
 import { BoolQueryBuilder, OccurrenceQueryBuilder } from './BoolQueryBuilder';
 import { ElasticsearchFilterRules } from '../utils/ElasticsearchFilterRules';
 import { QueryBuilderOptions } from '../types';
+import { ElastickbirdModel } from '../schema/ElasticSchema';
 
 /**
  * Elasticsearch Query Builder
@@ -20,6 +21,7 @@ import { QueryBuilderOptions } from '../types';
  * Note: The routing value will be used only if the routing field is set in the constructor.
  */
 export class ElastickbirdQuery {
+  private model: ElastickbirdModel;
   private query: { bool: Record<string, any> };
   private boolQueryBuilder: BoolQueryBuilder;
   private defaultOccurrence: OccurrenceQueryBuilder;
@@ -76,14 +78,12 @@ export class ElastickbirdQuery {
   /**
    * Creates a new ElastickbirdQuery
    * @param options - Configuration options
+   * @param options.model - The model instance
    */
   constructor({
-    sortRules = {},
-    filterRules,
-    routing = undefined,
-    routingRules = undefined,
-    searchAfterDelimiter
-  }: QueryBuilderOptions = {}) {
+    model
+  }: QueryBuilderOptions) {
+    this.model = model;
     this.query = { bool: {} };
     // create the base bool query builder
     this.boolQueryBuilder = new BoolQueryBuilder(this.query.bool, this);
@@ -95,11 +95,11 @@ export class ElastickbirdQuery {
     this.sort = [];
     this.searchAfter = [];
     // set options
-    this.searchAfterDelimiter = searchAfterDelimiter;
-    this.sortRules = sortRules;
-    this.filterRules = filterRules || new ElasticsearchFilterRules();
-    this.routing = routing;
-    this.routingRules = routingRules;
+    this.searchAfterDelimiter = model.getSearchAfterDelimiter() || "~";
+    this.sortRules = model.getSortRules() || {};
+    this.filterRules = model.getFilterRules() || new ElasticsearchFilterRules();
+    this.routing = model.getRouting();
+    this.routingRules = model.getRoutingRules() || {};
 
     this.bindMethods();
   }

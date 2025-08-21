@@ -1,4 +1,4 @@
-import { Client } from '@elastic/elasticsearch';
+import { ElastickbirdModel } from '../schema/ElasticSchema';
 
 export interface ElasticSchemaConfig {
   alias: string;
@@ -86,11 +86,7 @@ export interface BulkOperation {
 }
 
 export interface QueryBuilderOptions {
-  sortRules?: Record<string, (queryBuilder: any, order: string) => void>;
-  filterRules?: any;
-  routing?: string;
-  routingRules?: Record<string, (value: any) => string>;
-  searchAfterDelimiter?: string;
+  model: ElastickbirdModel;
 }
 
 export type OccurrenceType = 'must' | 'should' | 'filter' | 'mustNot';

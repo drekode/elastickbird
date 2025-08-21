@@ -7,6 +7,7 @@ import {
   createByQueryOperationResult 
 } from '../utils/ResponseResults';
 import { ElasticSchemaConfig, DocumentOperationResult, ByQueryOperationResult } from '../types';
+import { ElasticsearchFilterRules } from '../utils/ElasticsearchFilterRules';
 
 /**
  * ElastickbirdModel - A class for managing Elasticsearch indices, mappings, settings, and document operations.
@@ -133,6 +134,26 @@ export class ElastickbirdModel {
    */
   getAlias(): string {
     return this.schema.alias;
+  }
+
+  getSortRules(): Record<string, (queryBuilder: any, order: string) => void> {
+    return this.schema.sortRules || {};
+  }
+
+  getFilterRules(): any {
+    return this.schema.filterRules || new ElasticsearchFilterRules();
+  }
+
+  getRouting(): string | undefined {
+    return this.schema.routing;
+  }
+
+  getRoutingRules(): Record<string, (value: any) => string> {
+    return this.schema.routingRules || {};
+  }
+
+  getSearchAfterDelimiter(): string {
+    return this.schema.searchAfterDelimiter || "~";
   }
 
   /**
@@ -393,13 +414,7 @@ export class ElastickbirdModel {
    * @returns A new query builder instance.
    */
   initQueryBuilder(): ElastickbirdQuery {
-    return new ElastickbirdQuery({
-      sortRules: this.schema.sortRules,
-      filterRules: this.schema.filterRules,
-      routing: this.schema.routing,
-      routingRules: this.schema.routingRules,
-      searchAfterDelimiter: this.schema.searchAfterDelimiter
-    });
+    return new ElastickbirdQuery({ model: this});
   }
 
   /**
