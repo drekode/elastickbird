@@ -76,7 +76,7 @@ const result = await UserModel.indexDocument({
 });
 
 // Get a document by ID
-const user = await UserModel.initQueryBuilder({ id: '1' });
+const user = await UserModel.getDocument({ id: '1' });
 
 // Update a document
 await UserModel.updateDocument({
