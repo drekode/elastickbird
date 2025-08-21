@@ -1,6 +1,6 @@
 {
   "name": "elastickbird",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "elasticsearch object modeling for nodejs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
