@@ -1,7 +1,7 @@
 import { ElasticsearchClient } from '../client/ElasticsearchClient';
 import { ElastickbirdQuery } from '../query/ElastickbirdQuery';
-import { ElasticsearchBulk } from '../bulk/ElasticsearchBulk';
-import { ElasticsearchBulkQueue } from '../bulk/ElasticsearchBulkQueue';
+import { ElastickbirdBulk } from '../bulk/ElastickbirdBulk';
+import { ElastickbirdBulkQueue } from '../bulk/ElastickbirdBulkQueue';
 import { 
   createDocumentOperationResult, 
   createByQueryOperationResult 
@@ -613,8 +613,8 @@ export class ElastickbirdModel {
     batchMode?: boolean; 
     batchSize?: number; 
     refresh?: boolean; 
-  } = {}): ElasticsearchBulk {
-    return new ElasticsearchBulk({
+  } = {}): ElastickbirdBulk {
+    return new ElastickbirdBulk({
       getId: (payload: any) => {
         const id = this.getId(payload);
         return id || '';
@@ -637,8 +637,8 @@ export class ElastickbirdModel {
   }: { 
     batchSize?: number; 
     refresh?: boolean; 
-  } = {}): ElasticsearchBulkQueue {
-    return new ElasticsearchBulkQueue({
+  } = {}): ElastickbirdBulkQueue {
+    return new ElastickbirdBulkQueue({
       getId: (payload: any) => {
         const id = this.getId(payload);
         return id || '';

@@ -4,8 +4,8 @@ export default ElastickBird;
 
 export { ElastickbirdModel } from './model/ElastickbirdModel';
 export { ElastickbirdQuery } from './query/ElastickbirdQuery';
-export { ElasticsearchBulk } from './bulk/ElasticsearchBulk';
-export { ElasticsearchBulkQueue } from './bulk/ElasticsearchBulkQueue';
+export { ElastickbirdBulk } from './bulk/ElastickbirdBulk';
+export { ElastickbirdBulkQueue } from './bulk/ElastickbirdBulkQueue';
 export { ElasticsearchFilterRules } from './utils/ElasticsearchFilterRules';
 export { ElasticsearchClient } from './client/ElasticsearchClient';
 export { 

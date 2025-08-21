@@ -1,4 +1,4 @@
-import { ElasticsearchBulk } from './ElasticsearchBulk';
+import { ElastickbirdBulk } from './ElastickbirdBulk';
 import { DocOperationType } from '../utils/Constants';
 import { BulkOperationResult } from '../types';
 
@@ -13,7 +13,7 @@ interface ElasticsearchBulkQueueOptions {
   refresh?: boolean;
 }
 
-export class ElasticsearchBulkQueue extends ElasticsearchBulk {
+export class ElastickbirdBulkQueue extends ElastickbirdBulk {
   private executingPromise: Promise<void> | null = null;
   private resolveExecutingPromise?: () => void;
 

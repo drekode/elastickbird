@@ -19,7 +19,7 @@ interface ElasticsearchBulkOptions {
   refresh?: boolean;
 }
 
-export class ElasticsearchBulk {
+export class ElastickbirdBulk {
   private operations: any[] = [];
   private getId: (payload: any) => string | number;
   private schema: {
