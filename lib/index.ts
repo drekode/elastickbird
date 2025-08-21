@@ -6,7 +6,7 @@ export { ElastickbirdModel } from './model/ElastickbirdModel';
 export { ElastickbirdQuery } from './query/ElastickbirdQuery';
 export { ElastickbirdBulk } from './bulk/ElastickbirdBulk';
 export { ElastickbirdBulkQueue } from './bulk/ElastickbirdBulkQueue';
-export { ElasticsearchFilterRules } from './utils/ElasticsearchFilterRules';
+export { ElastickbirdFilterRules } from './utils/ElastickbirdFilterRules';
 export { ElasticsearchClient } from './client/ElasticsearchClient';
 export { 
   DocumentOperationResult, 

@@ -1,4 +1,4 @@
-export class ElasticsearchFilterRules {
+export class ElastickbirdFilterRules {
   private filterRules: Record<string, (query: any, value: any) => void>;
 
   static readonly ELASTICSEARCH_OPERATORS = {
@@ -58,9 +58,9 @@ export class ElasticsearchFilterRules {
     const args = this.splitTopLevel(match[2]);
 
     const result: any = {};
-    if (operator in ElasticsearchFilterRules.ELASTICSEARCH_OPERATORS) {
-      const esOperator = ElasticsearchFilterRules.ELASTICSEARCH_OPERATORS[
-        operator as keyof typeof ElasticsearchFilterRules.ELASTICSEARCH_OPERATORS
+    if (operator in ElastickbirdFilterRules.ELASTICSEARCH_OPERATORS) {
+      const esOperator = ElastickbirdFilterRules.ELASTICSEARCH_OPERATORS[
+        operator as keyof typeof ElastickbirdFilterRules.ELASTICSEARCH_OPERATORS
       ];
 
       result[esOperator] = {};

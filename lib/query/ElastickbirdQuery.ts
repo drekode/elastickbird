@@ -1,5 +1,5 @@
 import { BoolQuery, OccurrenceQuery } from './BoolQuery';
-import { ElasticsearchFilterRules } from '../utils/ElasticsearchFilterRules';
+import { ElastickbirdFilterRules } from '../utils/ElastickbirdFilterRules';
 import { QueryBuilderOptions } from '../types';
 import { ElastickbirdModel } from '../model/ElastickbirdModel';
 
@@ -31,7 +31,7 @@ export class ElastickbirdQuery {
   private searchAfterDelimiter?: string;
   private from: number;
   private sortRules: Record<string, (query: any, order: string) => void>;
-  private filterRules: ElasticsearchFilterRules;
+  private filterRules: ElastickbirdFilterRules;
   private routing?: string;
   private routingRules?: Record<string, (value: any) => string>;
   private routingValue?: string;
@@ -97,7 +97,7 @@ export class ElastickbirdQuery {
     // set options
     this.searchAfterDelimiter = model.getSearchAfterDelimiter() || "~";
     this.sortRules = model.getSortRules() || {};
-    this.filterRules = model.getFilterRules() || new ElasticsearchFilterRules();
+    this.filterRules = model.getFilterRules() || new ElastickbirdFilterRules();
     this.routing = model.getRouting();
     this.routingRules = model.getRoutingRules() || {};
 

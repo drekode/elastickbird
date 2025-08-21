@@ -147,9 +147,9 @@ const model = new ElastickbirdModel({
 ### Filter Rules
 
 ```typescript
-import { ElasticsearchFilterRules } from 'elastickbird';
+import { ElastickbirdFilterRules } from 'elastickbird';
 
-const filterRules = new ElasticsearchFilterRules({
+const filterRules = new ElastickbirdFilterRules({
   'active-users': (query) => {
     query.addTerm('status', 'active');
   },
@@ -203,7 +203,7 @@ interface ElastickBirdSchema {
   settings?: Record<string, any>;   // Index settings
   routing?: string;                 // Routing field
   routingRules?: Record<string, (value: any) => string>;
-  filterRules?: ElasticsearchFilterRules;
+  filterRules?: ElastickbirdFilterRules;
   sortRules?: Record<string, (query: any, order: string) => void>;
   searchAfterDelimiter?: string;    // Delimiter for search-after (default: '~')
 }

@@ -7,7 +7,7 @@ import {
   createByQueryOperationResult 
 } from '../utils/ResponseResults';
 import { ElastickBirdSchema, DocumentOperationResult, ByQueryOperationResult } from '../types';
-import { ElasticsearchFilterRules } from '../utils/ElasticsearchFilterRules';
+import { ElastickbirdFilterRules } from '../utils/ElastickbirdFilterRules';
 
 /**
  * ElastickbirdModel - A class for managing Elasticsearch indices, mappings, settings, and document operations.
@@ -141,7 +141,7 @@ export class ElastickbirdModel {
   }
 
   getFilterRules(): any {
-    return this.schema.filterRules || new ElasticsearchFilterRules();
+    return this.schema.filterRules || new ElastickbirdFilterRules();
   }
 
   getRouting(): string | undefined {
