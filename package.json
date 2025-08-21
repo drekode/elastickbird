@@ -1,12 +1,12 @@
 {
   "name": "elastickbird",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "elasticsearch object modeling for nodejs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dresiko/elastickbird.git"
+    "url": "https://github.com/dresikode/elastickbird.git"
   },
   "keywords": [
     "elasticsearch",
@@ -16,7 +16,7 @@
     "query",
     "nodejs"
   ],
-  "author": "Dresiko",
+  "author": "Dresikode",
   "license": "Apache-2.0",
   "files": [
     "dist/**",
