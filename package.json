@@ -24,10 +24,11 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build",
-    "test": "jest ./jest/**/*.test.ts",
+    "pretest": "yarn build",   
+    "test": "jest -c jest.config.js",
     "test:watch": "jest ./jest/**/*.test.ts --watch",
     "test:client": "jest ./jest/client/*.test.ts",
     "test:model": "jest ./jest/model/*.test.ts",
