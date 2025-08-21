@@ -1,4 +1,4 @@
-import { ElastickBirdModel } from '../model/ElastickBirdModel';
+import { ElastickbirdModel } from '../model/ElastickbirdModel';
 
 export interface ElastickBirdSchema {
   alias: string;
@@ -86,7 +86,7 @@ export interface BulkOperation {
 }
 
 export interface QueryBuilderOptions {
-  model: ElastickBirdModel;
+  model: ElastickbirdModel;
 }
 
 export type OccurrenceType = 'must' | 'should' | 'filter' | 'mustNot';

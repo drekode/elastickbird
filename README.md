@@ -38,10 +38,10 @@ ElasticsearchClient.configure({
 ### 2. Define a Model
 
 ```typescript
-import { ElastickBirdModel } from 'elastickbird';
+import { ElastickbirdModel } from 'elastickbird';
 
 // Define your model
-const UserModel = new ElastickBirdModel({
+const UserModel = new ElastickbirdModel({
   alias: 'users',
   primaryKeyAttribute: 'id',
   mappings: {
@@ -131,7 +131,7 @@ console.log(bulkResult.success); // true if all operations succeeded
 ### Routing
 
 ```typescript
-const model = new ElastickBirdModel({
+const model = new ElastickbirdModel({
   alias: 'orders',
   routing: 'customerId', // Route documents by customer ID
   mappings: {
@@ -158,7 +158,7 @@ const filterRules = new ElasticsearchFilterRules({
   }
 });
 
-const model = new ElastickBirdModel({
+const model = new ElastickbirdModel({
   alias: 'users',
   filterRules,
   mappings: { /* ... */ }
@@ -188,7 +188,7 @@ const result = await bulkQueue.waitForCompletion();
 
 ## API Reference
 
-### ElastickBirdModel
+### ElastickbirdModel
 
 The main class for defining and working with Elasticsearch indices.
 

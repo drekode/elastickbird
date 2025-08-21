@@ -1,15 +1,15 @@
-import { ElastickBirdModel } from "../../lib/model/ElastickBirdModel";
+import { ElastickbirdModel } from "../../lib/model/ElastickbirdModel";
 import { ElasticsearchClient } from "../../lib/client/ElasticsearchClient";
 
 const ELASTICSEARCH_URL = (global as any).ELASTICSEARCH_URL as string;
 
-describe("ElastickBirdModel Bulk Operations", () => {
-  let UserModel: ElastickBirdModel;
+describe("ElastickbirdModel Bulk Operations", () => {
+  let UserModel: ElastickbirdModel;
   
   beforeEach(async () => {
     ElasticsearchClient.configure({ node: ELASTICSEARCH_URL });
     
-    UserModel = new ElastickBirdModel({
+    UserModel = new ElastickbirdModel({
       alias: 'test-bulk-users',
       primaryKeyAttribute: 'id',
       mappings: {

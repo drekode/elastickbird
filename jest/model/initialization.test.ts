@@ -1,16 +1,16 @@
-import { ElastickBirdModel } from "../../lib/model/ElastickBirdModel";
+import { ElastickbirdModel } from "../../lib/model/ElastickbirdModel";
 import { ElasticsearchClient } from "../../lib/client/ElasticsearchClient";
 
 const ELASTICSEARCH_URL = (global as any).ELASTICSEARCH_URL as string;
 
-describe("ElastickBirdModel Initialization", () => {
+describe("ElastickbirdModel Initialization", () => {
   beforeEach(() => {
     ElasticsearchClient.configure({ node: ELASTICSEARCH_URL });
   });
 
   afterEach(async () => {
     // Cleanup any test indices
-    const testModel = new ElastickBirdModel({ 
+    const testModel = new ElastickbirdModel({ 
       alias: "test-example",
       mappings: { properties: {} }
     });
@@ -25,8 +25,8 @@ describe("ElastickBirdModel Initialization", () => {
     ElasticsearchClient.reset();
   });
 
-  test("should create ElastickBirdModel instance", () => {
-    const model = new ElastickBirdModel({ 
+  test("should create ElastickbirdModel instance", () => {
+    const model = new ElastickbirdModel({ 
       alias: "test-example",
       mappings: {
         properties: {
@@ -35,12 +35,12 @@ describe("ElastickBirdModel Initialization", () => {
         }
       }
     });
-    expect(model).toBeInstanceOf(ElastickBirdModel);
+    expect(model).toBeInstanceOf(ElastickbirdModel);
   });
 
   test("should throw error when creating index without client connection", () => {
     ElasticsearchClient.reset();
-    const model = new ElastickBirdModel({ 
+    const model = new ElastickbirdModel({ 
       alias: "test-example",
       mappings: { properties: {} }
     });
@@ -48,7 +48,7 @@ describe("ElastickBirdModel Initialization", () => {
   });
 
   test("should create index successfully", async () => {
-    const model = new ElastickBirdModel({ 
+    const model = new ElastickbirdModel({ 
       alias: "test-example",
       mappings: {
         properties: {
@@ -69,7 +69,7 @@ describe("ElastickBirdModel Initialization", () => {
   });
 
   test("should handle createIndexIfNotExists", async () => {
-    const model = new ElastickBirdModel({ 
+    const model = new ElastickbirdModel({ 
       alias: "test-example",
       mappings: {
         properties: {

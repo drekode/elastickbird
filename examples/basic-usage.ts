@@ -1,4 +1,4 @@
-import { ElastickBirdModel, ElasticsearchClient } from '../lib';
+import { ElastickbirdModel, ElasticsearchClient } from '../lib';
 
 // Configure Elasticsearch client
 ElasticsearchClient.configure({
@@ -11,7 +11,7 @@ ElasticsearchClient.configure({
 });
 
 // Define a user model
-const UserModel = new ElastickBirdModel({
+const UserModel = new ElastickbirdModel({
   alias: 'users',
   primaryKeyAttribute: 'id',
   mappings: {
