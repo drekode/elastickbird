@@ -1,4 +1,4 @@
-import { ElastickbirdModel } from '../model/ElastickbirdModels';
+import { ElastickbirdModel } from '../model/ElastickbirdModel';
 
 export interface ElastickBirdSchema {
   alias: string;

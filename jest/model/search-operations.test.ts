@@ -1,4 +1,4 @@
-import { ElastickbirdModel } from "../../lib/model/ElastickbirdModels";
+import { ElastickbirdModel } from "../../lib/model/ElastickbirdModel";
 import { ElasticsearchClient } from "../../lib/client/ElasticsearchClient";
 
 const ELASTICSEARCH_URL = (global as any).ELASTICSEARCH_URL as string;

@@ -1,3 +1,3 @@
-import { ElastickbirdModel } from './model/ElastickbirdModels';
+import { ElastickbirdModel } from './model/ElastickbirdModel';
 
 export default ElastickbirdModel;

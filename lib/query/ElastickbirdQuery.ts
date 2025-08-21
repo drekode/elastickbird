@@ -1,7 +1,7 @@
 import { BoolQuery, OccurrenceQuery } from './BoolQuery';
 import { ElastickbirdFilterRules } from '../utils/ElastickbirdFilterRules';
 import { QueryBuilderOptions } from '../types';
-import { ElastickbirdModel } from '../model/ElastickbirdModels';
+import { ElastickbirdModel } from '../model/ElastickbirdModel';
 
 /**
  * Elasticsearch Query Builder
