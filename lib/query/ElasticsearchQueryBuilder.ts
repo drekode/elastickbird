@@ -1,7 +1,7 @@
 import { BoolQueryBuilder, OccurrenceQueryBuilder } from './BoolQueryBuilder';
 import { ElasticsearchFilterRules } from '../utils/ElasticsearchFilterRules';
 import { QueryBuilderOptions } from '../types';
-import { ElastickbirdModel } from '../schema/ElasticSchema';
+import { ElastickBirdModel } from '../model/ElastickBirdModel';
 
 /**
  * Elasticsearch Query Builder
@@ -21,7 +21,7 @@ import { ElastickbirdModel } from '../schema/ElasticSchema';
  * Note: The routing value will be used only if the routing field is set in the constructor.
  */
 export class ElastickbirdQuery {
-  private model: ElastickbirdModel;
+  private model: ElastickBirdModel;
   private query: { bool: Record<string, any> };
   private boolQueryBuilder: BoolQueryBuilder;
   private defaultOccurrence: OccurrenceQueryBuilder;

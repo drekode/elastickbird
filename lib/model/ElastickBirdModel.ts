@@ -6,22 +6,22 @@ import {
   createDocumentOperationResult, 
   createByQueryOperationResult 
 } from '../utils/ResponseResults';
-import { ElasticSchemaConfig, DocumentOperationResult, ByQueryOperationResult } from '../types';
+import { ElastickBirdSchema, DocumentOperationResult, ByQueryOperationResult } from '../types';
 import { ElasticsearchFilterRules } from '../utils/ElasticsearchFilterRules';
 
 /**
- * ElastickbirdModel - A class for managing Elasticsearch indices, mappings, settings, and document operations.
+ * ElastickBirdModel - A class for managing Elasticsearch indices, mappings, settings, and document operations.
  * Provides functionality to interact with Elasticsearch via CRUD operations, bulk operations, and more.
  */
-export class ElastickbirdModel {
-  private schema: ElasticSchemaConfig;
+export class ElastickBirdModel {
+  private schema: ElastickBirdSchema;
 
      /**
-    * Creates an instance of ElastickbirdModel.
+    * Creates an instance of ElastickBirdModel.
     * @param schema - The schema configuration for the Elasticsearch index.
     */
-  constructor(schema: ElasticSchemaConfig) {
-    const defaultsSchema: Partial<ElasticSchemaConfig> = {
+  constructor(schema: ElastickBirdSchema) {
+    const defaultsSchema: Partial<ElastickBirdSchema> = {
       primaryKeyAttribute: "id",
       sortRules: {},
       searchAfterDelimiter: "~"

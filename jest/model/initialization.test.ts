@@ -1,23 +1,23 @@
-import { ElastickbirdModel } from "../../lib/schema/ElasticSchema";
+import { ElastickBirdModel } from "../../lib/model/ElastickBirdModel";
 import { ElasticsearchClient } from "../../lib/client/ElasticsearchClient";
 
 const ELASTICSEARCH_URL = (global as any).ELASTICSEARCH_URL as string;
 
-describe("ElastickbirdModel Initialization", () => {
+describe("ElastickBirdModel Initialization", () => {
   beforeEach(() => {
     ElasticsearchClient.configure({ node: ELASTICSEARCH_URL });
   });
 
   afterEach(async () => {
     // Cleanup any test indices
-    const testSchema = new ElastickbirdModel({ 
+    const testModel = new ElastickBirdModel({ 
       alias: "test-example",
       mappings: { properties: {} }
     });
     try {
-      const exists = await testSchema.existsIndex();
+      const exists = await testModel.existsIndex();
       if (exists) {
-        await testSchema.deleteIndex();
+        await testModel.deleteIndex();
       }
     } catch (e) {
       // Ignore cleanup errors
@@ -25,8 +25,8 @@ describe("ElastickbirdModel Initialization", () => {
     ElasticsearchClient.reset();
   });
 
-  test("should create ElastickbirdModel instance", () => {
-    const schema = new ElastickbirdModel({ 
+  test("should create ElastickBirdModel instance", () => {
+    const model = new ElastickBirdModel({ 
       alias: "test-example",
       mappings: {
         properties: {
@@ -35,20 +35,20 @@ describe("ElastickbirdModel Initialization", () => {
         }
       }
     });
-    expect(schema).toBeInstanceOf(ElastickbirdModel);
+    expect(model).toBeInstanceOf(ElastickBirdModel);
   });
 
   test("should throw error when creating index without client connection", () => {
     ElasticsearchClient.reset();
-    const schema = new ElastickbirdModel({ 
+    const model = new ElastickBirdModel({ 
       alias: "test-example",
       mappings: { properties: {} }
     });
-    expect(async () => await schema.createIndex()).rejects.toThrow("Elasticsearch client not configured");
+    expect(async () => await model.createIndex()).rejects.toThrow("Elasticsearch client not configured");
   });
 
   test("should create index successfully", async () => {
-    const schema = new ElastickbirdModel({ 
+    const model = new ElastickBirdModel({ 
       alias: "test-example",
       mappings: {
         properties: {
@@ -62,14 +62,14 @@ describe("ElastickbirdModel Initialization", () => {
       }
     });
     
-    await schema.createIndex();
+    await model.createIndex();
     
-    const exists = await schema.existsIndex();
+    const exists = await model.existsIndex();
     expect(exists).toBe(true);
   });
 
   test("should handle createIndexIfNotExists", async () => {
-    const schema = new ElastickbirdModel({ 
+    const model = new ElastickBirdModel({ 
       alias: "test-example",
       mappings: {
         properties: {
@@ -79,13 +79,13 @@ describe("ElastickbirdModel Initialization", () => {
     });
     
     // Should create index
-    await schema.createIndexIfNotExists();
-    let exists = await schema.existsIndex();
+    await model.createIndexIfNotExists();
+    let exists = await model.existsIndex();
     expect(exists).toBe(true);
     
     // Should not throw error if index already exists
-    await schema.createIndexIfNotExists();
-    exists = await schema.existsIndex();
+    await model.createIndexIfNotExists();
+    exists = await model.existsIndex();
     expect(exists).toBe(true);
   });
 });

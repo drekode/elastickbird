@@ -1,10 +1,10 @@
 # ElastickBird 🐦
 
-A high-level Elasticsearch driver for Node.js, inspired by Mongoose and Sequelize. ElastickBird provides an elegant, schema-based solution to work with Elasticsearch, making it easy to define mappings, perform CRUD operations, and execute complex queries.
+A high-level Elasticsearch driver for Node.js, inspired by Mongoose and Sequelize. ElastickBird provides an elegant, model-based solution to work with Elasticsearch, making it easy to define mappings, perform CRUD operations, and execute complex queries.
 
 ## Features
 
-- 🏗️ **Schema-based approach** - Define your Elasticsearch mappings with TypeScript interfaces
+- 🏗️ **Model-based approach** - Define your Elasticsearch mappings with TypeScript interfaces
 - 🔍 **Powerful Query Builder** - Fluent API for building complex Elasticsearch queries
 - 📦 **Bulk Operations** - Efficient bulk indexing, updating, and deleting with batch support
 - 🔄 **Index Management** - Create, update, and manage Elasticsearch indices
@@ -38,10 +38,10 @@ ElasticsearchClient.configure({
 ### 2. Define a Model
 
 ```typescript
-import { ElastickbirdModel } from 'elastickbird';
+import { ElastickBirdModel } from 'elastickbird';
 
-// Define your schema
-const UserModel = new ElastickbirdModel({
+// Define your model
+const UserModel = new ElastickBirdModel({
   alias: 'users',
   primaryKeyAttribute: 'id',
   mappings: {
@@ -131,7 +131,7 @@ console.log(bulkResult.success); // true if all operations succeeded
 ### Routing
 
 ```typescript
-const schema = new ElastickbirdModel({
+const model = new ElastickBirdModel({
   alias: 'orders',
   routing: 'customerId', // Route documents by customer ID
   mappings: {
@@ -158,7 +158,7 @@ const filterRules = new ElasticsearchFilterRules({
   }
 });
 
-const model = new ElastickbirdModel({
+const model = new ElastickBirdModel({
   alias: 'users',
   filterRules,
   mappings: { /* ... */ }
@@ -188,14 +188,14 @@ const result = await bulkQueue.waitForCompletion();
 
 ## API Reference
 
-### ElastickbirdModel
+### ElastickBirdModel
 
 The main class for defining and working with Elasticsearch indices.
 
 #### Constructor Options
 
 ```typescript
-interface ElasticSchemaConfig {
+interface ElastickBirdSchema {
   alias: string;                    // Index alias name
   mappings: Record<string, any>;    // Elasticsearch mappings
   primaryKeyAttribute?: string;     // Primary key field (default: 'id')

@@ -2,7 +2,7 @@ import ElastickBird from './elastickbird';
 
 export default ElastickBird;
 
-export { ElastickbirdModel } from './schema/ElasticSchema';
+export { ElastickBirdModel } from './model/ElastickBirdModel';
 export { ElastickbirdQuery } from './query/ElasticsearchQueryBuilder';
 export { BoolQueryBuilder } from './query/BoolQueryBuilder';
 export { ElasticsearchBulk } from './bulk/ElasticsearchBulk';
