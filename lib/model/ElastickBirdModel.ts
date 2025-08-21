@@ -1,5 +1,5 @@
 import { ElasticsearchClient } from '../client/ElasticsearchClient';
-import { ElastickbirdQuery } from '../query/ElasticsearchQueryBuilder';
+import { ElastickbirdQuery } from '../query/ElastickbirdQuery';
 import { ElasticsearchBulk } from '../bulk/ElasticsearchBulk';
 import { ElasticsearchBulkQueue } from '../bulk/ElasticsearchBulkQueue';
 import { 
@@ -10,14 +10,14 @@ import { ElastickBirdSchema, DocumentOperationResult, ByQueryOperationResult } f
 import { ElasticsearchFilterRules } from '../utils/ElasticsearchFilterRules';
 
 /**
- * ElastickBirdModel - A class for managing Elasticsearch indices, mappings, settings, and document operations.
+ * ElastickbirdModel - A class for managing Elasticsearch indices, mappings, settings, and document operations.
  * Provides functionality to interact with Elasticsearch via CRUD operations, bulk operations, and more.
  */
-export class ElastickBirdModel {
+export class ElastickbirdModel {
   private schema: ElastickBirdSchema;
 
      /**
-    * Creates an instance of ElastickBirdModel.
+    * Creates an instance of ElastickbirdModel.
     * @param schema - The schema configuration for the Elasticsearch index.
     */
   constructor(schema: ElastickBirdSchema) {
