@@ -76,7 +76,7 @@ const result = await UserModel.indexDocument({
 });
 
 // Get a document by ID
-const user = await UserModel.getDocumentById({ id: '1' });
+const user = await UserModel.getDocument({ id: '1' });
 
 // Update a document
 await UserModel.updateDocument({
@@ -224,7 +224,7 @@ interface ElasticSchemaConfig {
 - `deleteByQuery(params)` - Delete documents by query
 - `updateByQuery(params)` - Update documents by query
 - `documentExists(payload)` - Check if document exists
-- `getDocumentById(payload)` - Get document by ID
+- `getDocument(payload)` - Get document by ID
 - `QueryBuilder()` - Create a new query builder
 - `initBulk(options?)` - Initialize bulk operations
 - `initBulkQueue(options?)` - Initialize auto-batching bulk queue

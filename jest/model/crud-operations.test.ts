@@ -110,7 +110,7 @@ describe("ElastickbirdModel CRUD Operations", () => {
 
   describe("Document Retrieval", () => {
     test("should get document by ID", async () => {
-      const user = await UserModel.getDocumentById({ id: '1' });
+      const user = await UserModel.getDocument({ id: '1' });
       
       expect(user).toBeDefined();
       expect(user.id).toBe('1');
@@ -140,7 +140,7 @@ describe("ElastickbirdModel CRUD Operations", () => {
 
       // Verify update
       await UserModel.refreshIndex();
-      const updatedUser = await UserModel.getDocumentById({ id: '1' });
+      const updatedUser = await UserModel.getDocument({ id: '1' });
       expect(updatedUser.name).toBe('John Smith');
       expect(updatedUser.age).toBe(31);
       expect(updatedUser.email).toBe('john@example.com'); // Should preserve other fields
@@ -163,7 +163,7 @@ describe("ElastickbirdModel CRUD Operations", () => {
 
   describe("Error Handling", () => {
     test("should handle missing ID for operations requiring it", async () => {
-      const resultGet = await UserModel.getDocumentById({});
+      const resultGet = await UserModel.getDocument({});
       expect(resultGet.success).toBe(false);
       expect(resultGet.error).toContain('Missing primary key field');
 

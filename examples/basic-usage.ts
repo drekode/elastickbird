@@ -78,7 +78,7 @@ async function basicExample() {
     await UserModel.refreshIndex();
 
     // Get a document by ID
-    const user = await UserModel.getDocumentById({ id: '1' });
+    const user = await UserModel.getDocument({ id: '1' });
     console.log('📄 Retrieved user:', user);
 
     // Update a document

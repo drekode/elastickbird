@@ -133,8 +133,8 @@ describe("ElastickbirdModel Bulk Operations", () => {
 
       // Verify operations
       await UserModel.refreshIndex();
-      const user1 = await UserModel.getDocumentById({ id: '1' });
-      const user2 = await UserModel.getDocumentById({ id: '2' });
+      const user1 = await UserModel.getDocument({ id: '1' });
+      const user2 = await UserModel.getDocument({ id: '2' });
       
       expect(user1.age).toBe(31);
       expect(user1.status).toBe('updated');

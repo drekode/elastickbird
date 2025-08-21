@@ -550,7 +550,7 @@ export class ElastickbirdModel {
    * @param payload - The document payload to retrieve.
    * @returns The document source or an error if ID is missing.
    */
-  async getDocumentById(payload: any): Promise<any | DocumentOperationResult> {
+  async getDocument(payload: any): Promise<any | DocumentOperationResult> {
     const id = this.getId(payload);
     if (!id) return this.createMissingIdOperationError(payload);
 
