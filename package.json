@@ -1,6 +1,6 @@
 {
   "name": "elastickbird",
-  "version": "0.0.13",
+  "version": "0.1.0",
   "description": "elasticsearch object modeling for nodejs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -27,7 +27,7 @@
     "build": "tsc -p tsconfig.json",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build",
-    "pretest": "yarn build",   
+    "pretest": "yarn build",
     "test": "jest -c jest.config.js",
     "test:watch": "jest ./jest/**/*.test.ts --watch",
     "test:client": "jest ./jest/client/*.test.ts",
