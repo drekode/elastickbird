@@ -85,6 +85,13 @@ describe("ElastickbirdModel Search Operations", () => {
       const query = User.query();
       expect(query).toBeDefined();
       expect(typeof query.build).toBe("function");
+      const rawQuery = query.build();
+      expect(rawQuery).toBeDefined();
+      expect(rawQuery.query).toBeDefined();
+      expect(rawQuery.query.bool).toBeDefined();
+      expect(rawQuery.query.bool.filter).toBeDefined();
+      expect(rawQuery.from).toBe(0);
+      expect(rawQuery.size).toBe(10);
     });
 
     test("should build and execute complex query", async () => {
