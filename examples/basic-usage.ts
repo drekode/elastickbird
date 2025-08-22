@@ -11,7 +11,7 @@ ElasticsearchClient.configure({
 });
 
 // Define a user model
-const UserModel = new ElastickbirdModel({
+const User = new ElastickbirdModel({
   alias: 'users',
   primaryKeyAttribute: 'id',
   mappings: {
@@ -34,7 +34,7 @@ const UserModel = new ElastickbirdModel({
 async function basicExample() {
   try {
     // Create index if it doesn't exist
-    await UserModel.createIndexIfNotExists();
+    await User.createIndexIfNotExists();
     console.log('✅ Index created or already exists');
 
     // Index some documents
@@ -70,19 +70,19 @@ async function basicExample() {
 
     // Index documents one by one
     for (const user of users) {
-      const result = await UserModel.indexDocument(user);
+      const result = await User.indexDocument(user);
       console.log(`✅ Indexed user ${user.id}:`, result.success);
     }
 
     // Refresh index to make documents searchable immediately
-    await UserModel.refreshIndex();
+    await User.refreshIndex();
 
     // Get a document by ID
-    const user = await UserModel.getDocument({ id: '1' });
+    const user = await User.getDocument({ id: '1' });
     console.log('📄 Retrieved user:', user);
 
     // Update a document
-    const updateResult = await UserModel.updateDocument({
+    const updateResult = await User.updateDocument({
       id: '1',
       name: 'John Smith',
       age: 31
@@ -90,7 +90,7 @@ async function basicExample() {
     console.log('✏️ Updated user:', updateResult.success);
 
     // Search with query builder
-    const query = UserModel.query();
+    const query = User.query();
     
     // Build a complex query
     query.addTerm('status', 'active');
@@ -103,21 +103,21 @@ async function basicExample() {
       .setSize(10)
       .addSort('createdAt', 'desc');
 
-    const searchResults = await UserModel.search(query.build());
+    const searchResults = await User.search(query.build());
     console.log('🔍 Search results:', {
       count: searchResults.count,
       users: searchResults.rows
     });
 
     // Search for users with specific tags
-    const tagQuery = UserModel.query();
+    const tagQuery = User.query();
     tagQuery.addTerms('tags', ['developer', 'designer']);
     
-    const tagResults = await UserModel.search(tagQuery.build());
+    const tagResults = await User.search(tagQuery.build());
     console.log('🏷️ Users with developer or designer tags:', tagResults.rows);
 
     // Bulk operations example
-    const bulk = UserModel.initBulk();
+    const bulk = User.initBulk();
     
     // Add multiple operations
     bulk.addIndexOperation({
@@ -143,15 +143,15 @@ async function basicExample() {
     });
 
     // Check if a document exists
-    const exists = await UserModel.documentExists({ id: '1' });
+    const exists = await User.documentExists({ id: '1' });
     console.log('🔍 Document exists:', exists);
 
     // Delete a document
-    const deleteResult = await UserModel.deleteDocument({ id: '3' });
+    const deleteResult = await User.deleteDocument({ id: '3' });
     console.log('🗑️ Deleted user:', deleteResult.success);
 
     // Get index statistics
-    const indexSize = await UserModel.getIndexSize();
+    const indexSize = await User.getIndexSize();
     console.log('📊 Index size:', indexSize);
 
   } catch (error) {

@@ -4,12 +4,12 @@ import { ElasticsearchClient } from "../../lib/client/ElasticsearchClient";
 const ELASTICSEARCH_URL = (global as any).ELASTICSEARCH_URL as string;
 
 describe("ElastickbirdModel Bulk Operations", () => {
-  let UserModel: ElastickbirdModel;
+  let User: ElastickbirdModel;
   
   beforeEach(async () => {
     ElasticsearchClient.configure({ node: ELASTICSEARCH_URL });
     
-    UserModel = new ElastickbirdModel({
+    User = new ElastickbirdModel({
       alias: 'test-bulk-users',
       primaryKeyAttribute: 'id',
       mappings: {
@@ -29,14 +29,14 @@ describe("ElastickbirdModel Bulk Operations", () => {
       }
     });
 
-    await UserModel.createIndexIfNotExists();
+    await User.createIndexIfNotExists();
   });
 
   afterEach(async () => {
     try {
-      const exists = await UserModel.existsIndex();
+      const exists = await User.existsIndex();
       if (exists) {
-        await UserModel.deleteIndex();
+        await User.deleteIndex();
       }
     } catch (e) {
       // Ignore cleanup errors
@@ -46,7 +46,7 @@ describe("ElastickbirdModel Bulk Operations", () => {
 
   describe("Bulk Operations", () => {
     test("should initialize bulk operation", () => {
-      const bulk = UserModel.initBulk();
+      const bulk = User.initBulk();
       expect(bulk).toBeDefined();
       expect(typeof bulk.execute).toBe('function');
       expect(typeof bulk.addIndexOperation).toBe('function');
@@ -55,7 +55,7 @@ describe("ElastickbirdModel Bulk Operations", () => {
     });
 
     test("should perform bulk index operations", async () => {
-      const bulk = UserModel.initBulk();
+      const bulk = User.initBulk();
       
       const users = [
         {
@@ -88,25 +88,25 @@ describe("ElastickbirdModel Bulk Operations", () => {
       expect(result.total).toBe(2);
 
       // Verify documents were indexed
-      await UserModel.refreshIndex();
-      const exists1 = await UserModel.documentExists({ id: '1' });
-      const exists2 = await UserModel.documentExists({ id: '2' });
+      await User.refreshIndex();
+      const exists1 = await User.documentExists({ id: '1' });
+      const exists2 = await User.documentExists({ id: '2' });
       expect(exists1).toBe(true);
       expect(exists2).toBe(true);
     });
 
     test("should perform mixed bulk operations", async () => {
       // First, create a document to update
-      await UserModel.indexDocument({
+      await User.indexDocument({
         id: '1',
         name: 'John Doe',
         email: 'john@example.com',
         age: 30,
         status: 'active'
       });
-      await UserModel.refreshIndex();
+      await User.refreshIndex();
 
-      const bulk = UserModel.initBulk();
+      const bulk = User.initBulk();
       
       // Add new document
       bulk.addIndexOperation({
@@ -132,9 +132,9 @@ describe("ElastickbirdModel Bulk Operations", () => {
       expect(result.total).toBe(2);
 
       // Verify operations
-      await UserModel.refreshIndex();
-      const user1 = await UserModel.getDocument({ id: '1' });
-      const user2 = await UserModel.getDocument({ id: '2' });
+      await User.refreshIndex();
+      const user1 = await User.getDocument({ id: '1' });
+      const user2 = await User.getDocument({ id: '2' });
       
       expect(user1.age).toBe(31);
       expect(user1.status).toBe('updated');
@@ -142,7 +142,7 @@ describe("ElastickbirdModel Bulk Operations", () => {
     });
 
     test("should handle bulk operation errors gracefully", async () => {
-      const bulk = UserModel.initBulk();
+      const bulk = User.initBulk();
       
       // Add document with missing required field (should still succeed as ES is flexible)
       bulk.addIndexOperation({
@@ -161,14 +161,14 @@ describe("ElastickbirdModel Bulk Operations", () => {
 
   describe("Bulk Queue Operations", () => {
     test("should initialize bulk queue", () => {
-      const bulkQueue = UserModel.initBulkQueue();
+      const bulkQueue = User.initBulkQueue();
       expect(bulkQueue).toBeDefined();
       expect(typeof bulkQueue.waitForCompletion).toBe('function');
       expect(typeof bulkQueue.addOperationsToQueue).toBe('function');
     });
 
     test("should process bulk queue operations", async () => {
-      const bulkQueue = UserModel.initBulkQueue({ batchSize: 2 });
+      const bulkQueue = User.initBulkQueue({ batchSize: 2 });
       
       const users = [
         { id: '1', name: 'User 1', email: 'user1@example.com', age: 25 },
@@ -186,10 +186,10 @@ describe("ElastickbirdModel Bulk Operations", () => {
       expect(result.total).toBe(3);
 
       // Verify all documents were indexed
-      await UserModel.refreshIndex();
-      const exists1 = await UserModel.documentExists({ id: '1' });
-      const exists2 = await UserModel.documentExists({ id: '2' });
-      const exists3 = await UserModel.documentExists({ id: '3' });
+      await User.refreshIndex();
+      const exists1 = await User.documentExists({ id: '1' });
+      const exists2 = await User.documentExists({ id: '2' });
+      const exists3 = await User.documentExists({ id: '3' });
       
       expect(exists1).toBe(true);
       expect(exists2).toBe(true);
@@ -199,7 +199,7 @@ describe("ElastickbirdModel Bulk Operations", () => {
 
   describe("Batch Mode Operations", () => {
     test("should handle batch mode bulk operations", async () => {
-      const bulk = UserModel.initBulk({ 
+      const bulk = User.initBulk({ 
         batchMode: true, 
         batchSize: 2 
       });
@@ -221,10 +221,10 @@ describe("ElastickbirdModel Bulk Operations", () => {
       expect(result.total).toBe(5);
 
       // Verify all documents were indexed
-      await UserModel.refreshIndex();
+      await User.refreshIndex();
       
       for (let i = 1; i <= 5; i++) {
-        const exists = await UserModel.documentExists({ id: `user-${i}` });
+        const exists = await User.documentExists({ id: `user-${i}` });
         expect(exists).toBe(true);
       }
     });

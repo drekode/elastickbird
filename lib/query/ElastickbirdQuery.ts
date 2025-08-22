@@ -72,6 +72,9 @@ export class ElastickbirdQuery {
     "setRouting",
     "setRefresh",
     "setScript",
+    "search",
+    "update",
+    "delete",
     "build"
   ];
 
@@ -87,8 +90,8 @@ export class ElastickbirdQuery {
     this.query = { bool: {} };
     // create the base bool query builder
     this.boolQueryBuilder = new BoolQuery(this.query.bool, this);
-    // create the default occurrence (must) query builder
-    this.defaultOccurrence = this.boolQueryBuilder.must();
+    // create the default occurrence (filter) query builder
+    this.defaultOccurrence = this.boolQueryBuilder.filter();
     // default values
     this.size = 10;
     this.from = 0;
@@ -222,6 +225,24 @@ export class ElastickbirdQuery {
   setScript(script: any): this {
     this.script = script;
     return this;
+  }
+
+  search(options: any = {}): Promise<any> {
+    return this.model.search(this.build(), options);
+  }
+
+  updateByQuery(options: any = {}): Promise<any> {
+    return this.model.updateByQuery({
+      query: this.build(),
+      ...options
+    });
+  }
+
+  deleteByQuery(options: any = {}): Promise<any> {
+    return this.model.deleteByQuery({
+      query: this.build(),
+      ...options
+    });
   }
 
   /**
