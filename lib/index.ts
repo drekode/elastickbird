@@ -1,6 +1,6 @@
-import ElastickBird from './elastickbird';
+import Elastickbird from './elastickbird';
 
-export default ElastickBird;
+export default Elastickbird;
 
 export { ElastickbirdModel } from './model/ElastickbirdModel';
 export { ElastickbirdQuery } from './query/ElastickbirdQuery';

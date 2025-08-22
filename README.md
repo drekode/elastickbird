@@ -1,11 +1,15 @@
-# ElastickBird 🐦
+# Elastickbird 🐦
 
+[Elasticsearch]: https://www.elastic.co/elasticsearch
+[Mongoose]: https://mongoosejs.com/
+[Sequelize]: https://sequelize.org/
 [![npm version](https://img.shields.io/npm/v/elastickbird.svg)](https://www.npmjs.com/package/elastickbird)
 [![npm downloads](https://img.shields.io/npm/dm/elastickbird.svg)](https://www.npmjs.com/package/elastickbird)
 [![License](https://img.shields.io/npm/l/elastickbird.svg)](./LICENSE)
 [![CI](https://github.com/dresiko/elastickbird/actions/workflows/ci.yml/badge.svg)](https://github.com/dresiko/elastickbird/actions/workflows/ci.yml)
 
-A high-level Elasticsearch driver for Node.js, inspired by Mongoose and Sequelize. ElastickBird provides an elegant, model-based solution to work with Elasticsearch, making it easy to define mappings, perform CRUD operations, and execute complex queries.
+A high-level [Elasticsearch] driver for Node.js, inspired by [Mongoose] and [Sequelize]. Elastickbird provides an elegant, model-based solution to work with Elasticsearch, making it easy to define mappings, perform CRUD operations, and execute complex queries.
+
 
 ## Features
 
@@ -46,7 +50,7 @@ ElasticsearchClient.configure({
 import { ElastickbirdModel } from 'elastickbird';
 
 // Define your model
-const UserModel = new ElastickbirdModel({
+const User = new ElastickbirdModel({
   alias: 'users',
   primaryKeyAttribute: 'id',
   mappings: {
@@ -69,10 +73,10 @@ const UserModel = new ElastickbirdModel({
 
 ```typescript
 // Create the index
-await UserModel.createIndexIfNotExists();
+await User.createIndex();
 
 // Index a document
-const result = await UserModel.indexDocument({
+const result = await User.indexDocument({
   id: '1',
   name: 'John Doe',
   email: 'john@example.com',
@@ -81,24 +85,24 @@ const result = await UserModel.indexDocument({
 });
 
 // Get a document by ID
-const user = await UserModel.getDocument({ id: '1' });
+const user = await User.getDocument({ id: '1' });
 
 // Update a document
-await UserModel.updateDocument({
+await User.updateDocument({
   id: '1',
   name: 'John Smith',
   age: 31
 });
 
 // Delete a document
-await UserModel.deleteDocument({ id: '1' });
+await User.deleteDocument({ id: '1' });
 ```
 
 ### 4. Search with Query Builder
 
 ```typescript
 // Create a query builder
-const query = UserModel.query();
+const query = User.query();
 
 // Build a complex query
 query
@@ -110,7 +114,7 @@ query
   .addSort('createdAt', 'desc');
 
 // Execute the search
-const searchResults = await UserModel.search(query.build());
+const searchResults = await User.search(query.build());
 console.log(searchResults.rows); // Array of matching documents
 console.log(searchResults.count); // Total count
 ```
@@ -119,7 +123,7 @@ console.log(searchResults.count); // Total count
 
 ```typescript
 // Initialize bulk operation
-const bulk = UserModel.initBulk({ batchSize: 1000 });
+const bulk = User.initBulk({ batchSize: 1000 });
 
 // Add multiple operations
 bulk.addIndexOperation({ id: '1', name: 'User 1', email: 'user1@example.com' });
@@ -147,6 +151,13 @@ const model = new ElastickbirdModel({
     }
   }
 });
+
+// The `customerId` will automatically be used for routing, determining in which shard the document will be located.
+await User.createDocument({ id: '1', customerId: 'abc123' });
+
+// Adding a filter by `customerId` will automatically add the routing to the search,
+// causing Elasticsearch to search only in the relevant shard. This makes the query faster.
+User.query().addTerm("customerId", 'abc123')
 ```
 
 ### Filter Rules
@@ -178,14 +189,15 @@ query.applyFilters('active-users,recent');
 
 ```typescript
 // Initialize bulk queue for auto-batching
-const bulkQueue = UserModel.initBulkQueue({ batchSize: 500 });
+const bulkQueue = User.initBulkQueue({ batchSize: 500 });
 
-// Add operations - they'll be automatically batched and executed
-bulkQueue.addOperationsToQueue('index', [
-  { id: '1', name: 'User 1' },
-  { id: '2', name: 'User 2' },
-  // ... thousands of documents
-]);
+// Add operations in a loop
+for (let i = 1; i <= 2000; i++) {
+  bulkQueue.addOperationsToQueue('index', [
+    { id: String(i), name: `User ${i}` }
+  ]);
+  // As you add operations, Elastickbird automatically batches and sends them to Elasticsearch for efficient processing.
+}
 
 // Wait for all operations to complete
 const result = await bulkQueue.waitForCompletion();
