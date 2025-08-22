@@ -73,7 +73,7 @@ const UserModel = new ElastickbirdModel({
 
 ```typescript
 // Create the index
-await UserModel.createIndexIfNotExists();
+await UserModel.createIndex();
 
 // Index a document
 const result = await UserModel.indexDocument({
