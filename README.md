@@ -1,11 +1,15 @@
 # Elastickbird 🐦
 
+[Elasticsearch]: https://www.elastic.co/elasticsearch
+[Mongoose]: https://mongoosejs.com/
+[Sequelize]: https://sequelize.org/
 [![npm version](https://img.shields.io/npm/v/elastickbird.svg)](https://www.npmjs.com/package/elastickbird)
 [![npm downloads](https://img.shields.io/npm/dm/elastickbird.svg)](https://www.npmjs.com/package/elastickbird)
 [![License](https://img.shields.io/npm/l/elastickbird.svg)](./LICENSE)
 [![CI](https://github.com/dresiko/elastickbird/actions/workflows/ci.yml/badge.svg)](https://github.com/dresiko/elastickbird/actions/workflows/ci.yml)
 
-A high-level Elasticsearch driver for Node.js, inspired by Mongoose and Sequelize. Elastickbird provides an elegant, model-based solution to work with Elasticsearch, making it easy to define mappings, perform CRUD operations, and execute complex queries.
+A high-level [Elasticsearch] driver for Node.js, inspired by [Mongoose] and [Sequelize]. Elastickbird provides an elegant, model-based solution to work with Elasticsearch, making it easy to define mappings, perform CRUD operations, and execute complex queries.
+
 
 ## Features
 
