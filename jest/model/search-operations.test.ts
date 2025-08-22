@@ -117,7 +117,7 @@ describe("ElastickbirdModel Search Operations", () => {
       const query = User.query();
       query.addTerms("tags", ["developer", "designer"]);
 
-      const results = await User.search(query.build());
+      const results = await query.search();
 
       expect(results.count).toBe(2);
       expect(results.rows.length).toBe(2);
@@ -131,7 +131,7 @@ describe("ElastickbirdModel Search Operations", () => {
       const query = User.query();
       query.addRange("age", { gte: 30 });
 
-      const results = await User.search(query.build());
+      const results = await query.search();
 
       expect(results.count).toBe(2);
       results.rows.forEach((user: any) => {
@@ -143,7 +143,7 @@ describe("ElastickbirdModel Search Operations", () => {
       const query = User.query();
       query.addMatch("name", "John");
 
-      const results = await User.search(query.build());
+      const results = await query.search();
 
       expect(results.count).toBe(1);
       expect(results.rows[0].name).toBe("John Doe");
@@ -153,7 +153,7 @@ describe("ElastickbirdModel Search Operations", () => {
       const query = User.query();
       query.addTerm("status", "nonexistent");
 
-      const results = await User.search(query.build());
+      const results = await query.search();
 
       expect(results.count).toBe(0);
       expect(results.rows).toEqual([]);
@@ -165,7 +165,7 @@ describe("ElastickbirdModel Search Operations", () => {
       const query = User.query();
       query.addTerm("status", "active").setSize(1);
 
-      const results = await User.search(query.build());
+      const results = await query.search();
 
       expect(results.rows.length).toBe(1);
     });
@@ -176,7 +176,7 @@ describe("ElastickbirdModel Search Operations", () => {
 
       query.setSize(10).addSort("age", "asc");
 
-      const results = await User.search(query.build());
+      const results = await query.search();
 
       expect(results.rows.length).toBe(2);
       expect(results.rows[0].age).toBeLessThanOrEqual(results.rows[1].age);
@@ -186,7 +186,7 @@ describe("ElastickbirdModel Search Operations", () => {
       const query = User.query();
       query.setSize(1).setFrom(1).addSort("age", "asc");
 
-      const results = await User.search(query.build());
+      const results = await query.search();
 
       expect(results.rows.length).toBe(1);
       // Should be the second result when sorted by age
