@@ -114,7 +114,7 @@ query
   .addSort('createdAt', 'desc');
 
 // Execute the search
-const searchResults = await User.search(query.build());
+const searchResults = await query.search()
 console.log(searchResults.rows); // Array of matching documents
 console.log(searchResults.count); // Total count
 ```
