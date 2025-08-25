@@ -9,11 +9,15 @@ on:
 
 jobs:
   release:
+    # Only run if the PR was merged AND the source branch starts with release/
     if: "github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/')"
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      id-token: write
+      contents: write        # needed to push tags & create releases
+      id-token: write        # needed for npm --provenance
+
+    env:
+      PKG_NAME: elastickbird
 
     steps:
       - name: Checkout merge commit
@@ -26,15 +30,17 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
-          cache: yarn   # change to npm if you use npm
+          cache: yarn            # change to 'npm' if you use npm
 
       - name: Read version from package.json
         id: v
-        run: node -e "console.log('value=' + require('./package.json').version)" >> "$GITHUB_OUTPUT"
+        run: |
+          node -e "console.log('value=' + require('./package.json').version)" >> "$GITHUB_OUTPUT"
 
       - name: "Guard: tag & npm version must be new"
         env:
           VERSION: ${{ steps.v.outputs.value }}
+          PKG: ${{ env.PKG_NAME }}
         run: |
           TAG="v$VERSION"
           echo "Checking $TAG..."
@@ -42,31 +48,44 @@ jobs:
           if git rev-parse "$TAG" >/dev/null 2>&1; then
             echo "Tag $TAG already exists"; exit 1
           fi
-          if npm view elastickbird@"$VERSION" version >/dev/null 2>&1; then
-            echo "Version $VERSION already on npm"; exit 1
+          if npm view "$PKG@$VERSION" version >/dev/null 2>&1; then
+            echo "Version $VERSION already on npm for $PKG"; exit 1
           fi
-
+          echo "OK to release $PKG@$VERSION"
 
       - name: Install deps
-        run: yarn install --frozen-lockfile   # or: npm ci
+        run: yarn install --frozen-lockfile    # or: npm ci
 
       - name: Build
-        run: yarn build                       # or your build cmd; remove if not needed
+        run: yarn build                        # or your build cmd; remove if not needed
 
       - name: Publish to npm
         run: npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Create git tag
+      - name: Configure git user
         run: |
-          TAG="v${{ steps.v.outputs.value }}"
-          git tag -a "$TAG" -m "Elastickbird $TAG"
-          git push origin "$TAG"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create git tag
+        env:
+          VERSION: ${{ steps.v.outputs.value }}
+        run: |
+          TAG="v$VERSION"
+          git fetch --tags --quiet
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists, skipping creation"
+          else
+            git tag -a "$TAG" -m "Elastickbird $TAG"
+            git push origin "$TAG"
+          fi
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.v.outputs.value }}
+          target_commitish: ${{ github.event.pull_request.merge_commit_sha }}
           name: Elastickbird v${{ steps.v.outputs.value }}
           generate_release_notes: true
