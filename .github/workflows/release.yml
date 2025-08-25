@@ -30,7 +30,7 @@ jobs:
 
       - name: Read version from package.json
         id: v
-        run: echo "value=$(node -p \"require('./package.json').version\")" >> "$GITHUB_OUTPUT"
+        run: node -e "console.log('value=' + require('./package.json').version)" >> "$GITHUB_OUTPUT"
 
       - name: "Guard: tag & npm version must be new"
         env:
