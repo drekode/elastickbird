@@ -1,54 +1,72 @@
-name: Publish to npm
+name: Release on merge
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'         # v0.1.0, v0.1.1, v1.2.3, ...
-  release:
-    types: [published]   # when you publish a GitHub Release
+  pull_request:
+    types:
+      - closed
+    branches:
+      - master
 
 jobs:
-  publish:
-    if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/')
+  release:
+    if: "github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/')"
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      id-token: write     # needed for npm --provenance
+      contents: write
+      id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout merge commit
+        uses: actions/checkout@v4
         with:
-          # checkout the exact tag for either trigger
-          ref: ${{ github.event_name == 'release' && github.event.release.tag_name || github.ref_name }}
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: 'https://registry.npmjs.org'
-          cache: 'yarn' 
+          registry-url: https://registry.npmjs.org
+          cache: yarn   # change to npm if you use npm
 
-      - run: yarn install --frozen-lockfile
-      - run: yarn build
+      - name: Read version from package.json
+        id: v
+        run: echo "value=$(node -p \"require('./package.json').version\")" >> "$GITHUB_OUTPUT"
 
-      - name: Verify tag format & match package.json
+      - name: "Guard: tag & npm version must be new"
+        env:
+          VERSION: ${{ steps.v.outputs.value }}
         run: |
-          TAG="${{ github.event_name == 'release' && github.event.release.tag_name || github.ref_name }}"
-          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Tag must be vX.Y.Z (got $TAG)"; exit 1; }
-          PKG=$(node -p "require('./package.json').version")
-          [ "v$PKG" = "$TAG" ] || { echo "Tag $TAG != package.json version $PKG"; exit 1; }
-
-      - name: Skip if already on npm (prevents double-publish)
-        id: exists
-        run: |
-          V=$(node -p "require('./package.json').version")
-          if npm view elastickbird@$V version >/dev/null 2>&1; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
+          TAG="v$VERSION"
+          echo "Checking $TAG..."
+          git fetch --tags --quiet
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists"; exit 1
+          fi
+          if npm view elastickbird@"$VERSION" version >/dev/null 2>&1; then
+            echo "Version $VERSION already on npm"; exit 1
           fi
 
+
+      - name: Install deps
+        run: yarn install --frozen-lockfile   # or: npm ci
+
+      - name: Build
+        run: yarn build                       # or your build cmd; remove if not needed
+
       - name: Publish to npm
-        if: steps.exists.outputs.exists == 'false'
         run: npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create git tag
+        run: |
+          TAG="v${{ steps.v.outputs.value }}"
+          git tag -a "$TAG" -m "Elastickbird $TAG"
+          git push origin "$TAG"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.v.outputs.value }}
+          name: Elastickbird v${{ steps.v.outputs.value }}
+          generate_release_notes: true
