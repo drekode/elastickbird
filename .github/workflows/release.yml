@@ -1,43 +1,54 @@
-name: Release
+name: Publish to npm
 
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'   # run only on SemVer tags like v0.1.0
+      - 'v*.*.*'         # v0.1.0, v0.1.1, v1.2.3, ...
+  release:
+    types: [published]   # when you publish a GitHub Release
 
 jobs:
   publish:
+    if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write            # needed for npm --provenance
+      id-token: write     # needed for npm --provenance
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # checkout the exact tag for either trigger
+          ref: ${{ github.event_name == 'release' && github.event.release.tag_name || github.ref_name }}
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: 'https://registry.npmjs.org'
-          cache: 'yarn'
+          cache: 'yarn' 
 
-      - name: Install deps
-        run: yarn install --frozen-lockfile
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
 
-      - name: Build
-        run: yarn build
-
-      - name: Verify tag matches package.json version
+      - name: Verify tag format & match package.json
         run: |
-          PKG_VERSION=$(node -p "require('./package.json').version")
-          TAG_VERSION=${GITHUB_REF_NAME#v}
-          if [ "$PKG_VERSION" != "$TAG_VERSION" ]; then
-            echo "❌ Tag v$TAG_VERSION does not match package.json version $PKG_VERSION"
-            exit 1
+          TAG="${{ github.event_name == 'release' && github.event.release.tag_name || github.ref_name }}"
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Tag must be vX.Y.Z (got $TAG)"; exit 1; }
+          PKG=$(node -p "require('./package.json').version")
+          [ "v$PKG" = "$TAG" ] || { echo "Tag $TAG != package.json version $PKG"; exit 1; }
+
+      - name: Skip if already on npm (prevents double-publish)
+        id: exists
+        run: |
+          V=$(node -p "require('./package.json').version")
+          if npm view elastickbird@$V version >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
           fi
-          echo "✅ Tag matches package.json ($PKG_VERSION)"
 
       - name: Publish to npm
+        if: steps.exists.outputs.exists == 'false'
         run: npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
